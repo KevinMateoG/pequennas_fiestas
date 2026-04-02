@@ -17,9 +17,10 @@ app.use(
   })
 );
 
-app.use("api/auth/{*any}", toNodeHandler(auth))
+app.use("/api/auth", toNodeHandler(auth))
 
 app.use(express.json());
+
 app.use("/api/onboarding", onboardingRouter)
 app.get("/health", (_req, res) => res.json({ ok: true }));
 

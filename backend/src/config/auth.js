@@ -12,7 +12,7 @@ export const auth = betterAuth({
 
   basePath: "/api/auth",
 
-  adapter: drizzleAdapter(db, {
+  database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
       ...schema,
