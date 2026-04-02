@@ -1,6 +1,9 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import "dotenv/config"
+
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./config/auth.js";
 
 const app = express();
 
@@ -12,6 +15,10 @@ app.use(
     credentials: true,
   })
 );
+
+app.all("api/auth/{*Any}", toNodeHandler(auth))
+
+app.use(express.json());
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 

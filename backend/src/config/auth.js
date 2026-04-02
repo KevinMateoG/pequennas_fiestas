@@ -1,8 +1,8 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
-import { db } from "./db";
-import * as schema from "./schema";
+import { db } from "./db.js";
+import * as schema from "./schema.js";
 
 export const auth = betterAuth({
   // ... your existing config
@@ -24,5 +24,3 @@ export const auth = betterAuth({
     enabled: true,
   },
 });
-
-module.exports = { auth };
