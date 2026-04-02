@@ -1,7 +1,6 @@
-const { pgTable, uuid, text, boolean, timestamp } = require("drizzle-orm/pg-core");
-const { useReducer } = require("react");
+import { pgTable, uuid, text, boolean, timestamp } from "drizzle-orm/pg-core";
 
-const users = pgTable("users",{
+export const users = pgTable("users",{
     id: uuid("id").primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull().unique(),
@@ -16,5 +15,3 @@ const users = pgTable("users",{
 
     }
 );
-
-module.exports = {users}

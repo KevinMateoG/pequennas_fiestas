@@ -1,17 +1,8 @@
-import { dash } from "@better-auth/infra";
-const { betterAuth } = require("better-auth");
-const { drizzleAdapter } = require("@better-aut/drizzle-adpter");
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
-const { db } = require("./db");
-const schema = require("./schema")
-
-const ALLOWED_ROLES = new Set(["cliente", "artista"]);
-
-function normalizeRole(value) {
-  if (typeof value !== "string") return null
-  const role = value.trim().toLowerCase()
-  return ALLOWED_ROLES.has(role) ? role : null
-}
+import { db } from "./db";
+import * as schema from "./schema";
 
 export const auth = betterAuth({
   // ... your existing config
@@ -22,27 +13,16 @@ export const auth = betterAuth({
   basePath: "/api/auth",
 
   adapter: drizzleAdapter(db, {
-    schema
+    provider: "pg",
+    schema: {
+      ...schema,
+      user: schema.users,
+    },
   }),
 
   emailAndPassword: {
-    enabled: true
+    enabled: true,
   },
+});
 
-  hooks: {
-    beforeSignUp: async (ctx) => {
-      const role = normalizeRole(ctx?.body?.role);
-      if (!role) {
-        throw new Error("role invalido Usa 'cliente' o 'artista'")
-      }
-      ctx.body.role = role
-
-      if (typeof ctx.body.isActivate === "undefined") {
-        ctx.body.isActivate = true;
-      }
-      return ctx
-    },
-  },
-})
-
-module.exports = {auth};
+module.exports = { auth };
