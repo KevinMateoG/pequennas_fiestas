@@ -30,7 +30,7 @@ onboardingRouter.post("/role", async (req, res) => {
 
         await db.update(user).set({role}).where(
             eq(user.id, userId)
-        )
+        ).execute()
 
         if (role === "artista"){
             const existing = await db.select({id: artistProfiles.id}).from(artistProfiles)
@@ -43,7 +43,8 @@ onboardingRouter.post("/role", async (req, res) => {
                 });
             }
         }
-        return req.json({ok:true,role})
+        
+        return res.json({ok:true,role})
     } catch (err){
         console.log(err);
         return res.status(500).json({error: "Internal Server Error"})

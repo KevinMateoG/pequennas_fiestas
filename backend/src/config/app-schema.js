@@ -2,13 +2,13 @@ import { pgTable, uuid, text, boolean, timestamp, numeric } from "drizzle-orm/pg
 
 export const artistProfiles = pgTable("artist_profiles", {
     id: uuid("id").primaryKey(),
-    userId: text("userId").notNull().unique(),
+    userId: text("user_id").notNull().unique(),
 
     bio: text("bio"),
-    contactPhone: text("contactPhone"),
-    contactSocial: text("contactSocial"),
-    baseRate: numeric("baseRate", {precision:10, scale:2}),
+    contactPhone: text("contact_phone"),
+    contactSocial: text("contact_social"),
+    baseRate: numeric("base_rate", {precision:10, scale:2}),
     city: text("city"),
-    converageArea: text("converageArea"),
+    converageArea: text("converage_area"),
     category: text("category")
 })
