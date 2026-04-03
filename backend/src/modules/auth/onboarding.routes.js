@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { randomUUID } from "node:crypto"
 
 import {db} from "../../config/db.js"
-import { users, artistProfiles } from "../../config/schema.js";
+import { user, artistProfiles } from "../../config/schema.js";
 import { auth } from "../../config/auth.js";
 
 export const onboardingRouter = express.Router()
@@ -28,8 +28,8 @@ onboardingRouter.post("/role", async (req, res) => {
             return res.status(400).json({error: "Invalid role"})
         }
 
-        await db.update(users).set({role}).where(
-            eq(users.id, userId)
+        await db.update(user).set({role}).where(
+            eq(user.id, userId)
         )
 
         if (role === "artista"){
