@@ -1,31 +1,7 @@
 function CatalogPage() {
 	return (
-		<div className="min-h-screen bg-[#fbf8ff] text-[#2e3145] antialiased">
-			<nav className="fixed top-0 z-50 w-full bg-white/80 shadow-sm backdrop-blur-md">
-				<div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-					<div className="text-xl font-bold tracking-tighter text-slate-900">ArtistHire</div>
-					<div className="hidden items-center gap-x-8 md:flex">
-						<a className="font-semibold text-indigo-600" href="#catalog">
-							Browse Artists
-						</a>
-						<a className="text-slate-600 transition-colors hover:text-indigo-600" href="#how-it-works">
-							How it Works
-						</a>
-						<a className="text-slate-600 transition-colors hover:text-indigo-600" href="#pricing">
-							Pricing
-						</a>
-					</div>
-					<div className="flex items-center gap-x-4">
-						<button className="px-4 py-2 text-slate-600 transition-colors hover:text-indigo-600">Log In</button>
-						<button className="rounded-lg bg-indigo-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-indigo-700">
-							Register
-						</button>
-					</div>
-				</div>
-			</nav>
-
-			<main id="catalog" className="mx-auto flex max-w-7xl flex-col gap-8 px-6 pb-16 pt-24 md:flex-row">
-				<aside className="w-full flex-shrink-0 md:w-72">
+		<main id="catalog" className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 bg-[#fbf8ff] px-6 pb-16 pt-24 text-[#2e3145] antialiased md:flex-row">
+				<aside className="w-full shrink-0 md:w-72">
 					<div className="sticky top-24 space-y-8 rounded-xl bg-white p-5 shadow-sm">
 						<div className="flex items-center justify-between">
 							<h2 className="font-bold tracking-tight">Filters</h2>
@@ -114,14 +90,6 @@ function CatalogPage() {
 					</div>
 				</section>
 			</main>
-
-			<footer className="border-t border-slate-100 bg-white py-8">
-				<div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-8 md:flex-row">
-					<div className="font-bold text-slate-900">ArtistHire</div>
-					<p className="text-sm text-slate-500">© 2024 ArtistHire Marketplace. All rights reserved.</p>
-				</div>
-			</footer>
-		</div>
 	)
 }
 
