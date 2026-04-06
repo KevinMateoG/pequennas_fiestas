@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function CatalogPage() {
 	return (
 		<main id="catalog" className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 bg-[#fbf8ff] px-6 pb-16 pt-24 text-[#2e3145] antialiased md:flex-row">
@@ -58,29 +60,29 @@ function CatalogPage() {
 					</div>
 
 					<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-						<div className="overflow-hidden rounded-xl bg-white shadow-sm">
+						<Link to="/detail" className="overflow-hidden rounded-xl bg-white shadow-sm transition-transform hover:-translate-y-1">
 							<img alt="Artist 1" className="aspect-square w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxHYDoliqHftEMQckfvFrwn63j8FV5GWt1NBH3SG531J6y2M_Vx2b9YfasgDIR2moT8T5ndXFF_S3z5YZhxbUelkShfHHWxBPvT0Iua4JnHnGDCqdq9xC984e1ufew8q4xN3JhJ9sywEcE8T1jQcQsUXsw1kAjSi8UaQCnRWMQRY1AwWZym6p-l9vEZigD9u8cfYo0eqUjKLvT0x_jbbT_Q8hlHE9hy3oHj2lBOJdH2avOkBu05TiwwKaug7iPdwxh8fDB61UGJHk" />
 							<div className="p-5">
 								<h3 className="text-lg font-bold tracking-tight">Elena Rodriguez</h3>
 								<p className="text-sm text-slate-600">Digital Art · 4.9 · from $45 per hour</p>
 							</div>
-						</div>
+						</Link>
 
-						<div className="overflow-hidden rounded-xl bg-white shadow-sm">
+						<Link to="/detail" className="overflow-hidden rounded-xl bg-white shadow-sm transition-transform hover:-translate-y-1">
 							<img alt="Artist 2" className="aspect-square w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArmZaxlndliiveR4nlae5HTL9JUawQGcP8NHjjJENmccQ6Sv0d8BI2-8YvGzXnn62ZKVjQ2eynhifs9ZPAZo5t71l9CqbE4ZDViaiKqJ3ypipXjR1v45l7MOmHruRrjaNfjYBe3vFSrDjxTD0JQiXnz41ZHHmXBdc73sTHgaFRjCBgg04yvMaLsAMuymTjjsl6Nke-4xgtNJjeSZ_uunv7BVWGmSbdEXTawJgMJbLhrBhfBrp_Xyej1JGc4Wgyo2yABxE0kyDRJDQ" />
 							<div className="p-5">
 								<h3 className="text-lg font-bold tracking-tight">Marcus Thorne</h3>
 								<p className="text-sm text-slate-600">Illustration · 5.0 · from $60 per hour</p>
 							</div>
-						</div>
+						</Link>
 
-						<div className="overflow-hidden rounded-xl bg-white shadow-sm">
+						<Link to="/detail" className="overflow-hidden rounded-xl bg-white shadow-sm transition-transform hover:-translate-y-1">
 							<img alt="Artist 3" className="aspect-square w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBElGDdvpeREyRcDNOlu_ZJ1hhe-U1o4Y059-htMtvEcKQyJm3anYq3pM-GzHExXZNxuFavZxNKJnZvEyfQf6b4I8cUQ-0sj5fv6LkbyKq2zzC_ZnnajpdhRgOKenK_iz1gzR4vBTXU8knYjawwJEn6XHYyTuNHEJ-uUDUT5sA83QwBqoKgRmOxSDvlKMs9xqqANZBBV5nbVtA1xnXvOFLcgwqNCIRKz-t3fiqxobKwozfIkOvbiCdDNsGy-Ycpc1pHdlThAU9001M" />
 							<div className="p-5">
 								<h3 className="text-lg font-bold tracking-tight">Sophia Chen</h3>
 								<p className="text-sm text-slate-600">Photography · 4.8 · from $85 per hour</p>
 							</div>
-						</div>
+						</Link>
 					</div>
 
 					<div className="mt-12 flex justify-center gap-2">
