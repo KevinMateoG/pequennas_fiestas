@@ -1,6 +1,56 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
 function CatalogPage() {
+	const [artists, setArtists] = useState([])
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState('')
+	const [search, setSearch] = useState('')
+
+	useEffect(() => {
+		const controller = new AbortController()
+
+		async function fetchArtists() {
+			try {
+				setLoading(true)
+				setError('')
+
+				const response = await fetch(`${API_BASE_URL}/api/artists`, {
+					signal: controller.signal,
+				})
+
+				if (!response.ok) {
+					throw new Error('No se pudo cargar el catalogo de artistas.')
+				}
+
+				const payload = await response.json()
+				setArtists(Array.isArray(payload.data) ? payload.data : [])
+			} catch (fetchError) {
+				if (fetchError.name !== 'AbortError') {
+					setError(fetchError.message)
+				}
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		fetchArtists()
+
+		return () => controller.abort()
+	}, [])
+
+	const filteredArtists = useMemo(() => {
+		const normalizedSearch = search.trim().toLowerCase()
+
+		if (!normalizedSearch) {
+			return artists
+		}
+
+		return artists.filter((artist) => artist.name?.toLowerCase().includes(normalizedSearch))
+	}, [artists, search])
+
 	return (
 		<main id="catalog" className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 bg-[#fbf8ff] px-6 pb-16 pt-24 text-[#2e3145] antialiased md:flex-row">
 				<aside className="w-full shrink-0 md:w-72">
@@ -14,6 +64,8 @@ function CatalogPage() {
 							<input
 								className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500"
 								placeholder="e.g. Elena Rodriguez"
+								value={search}
+								onChange={(event) => setSearch(event.target.value)}
 								type="text"
 							/>
 						</div>
@@ -59,31 +111,27 @@ function CatalogPage() {
 						<p className="mt-2 max-w-lg text-slate-600">Connect with vetted professionals from around the globe for your next creative project.</p>
 					</div>
 
+					{loading && <p className="mb-6 rounded-lg bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">Cargando artistas...</p>}
+					{error && <p className="mb-6 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p>}
+
 					<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-						<Link to="/detail" className="overflow-hidden rounded-xl bg-white shadow-sm transition-transform hover:-translate-y-1">
-							<img alt="Artist 1" className="aspect-square w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxHYDoliqHftEMQckfvFrwn63j8FV5GWt1NBH3SG531J6y2M_Vx2b9YfasgDIR2moT8T5ndXFF_S3z5YZhxbUelkShfHHWxBPvT0Iua4JnHnGDCqdq9xC984e1ufew8q4xN3JhJ9sywEcE8T1jQcQsUXsw1kAjSi8UaQCnRWMQRY1AwWZym6p-l9vEZigD9u8cfYo0eqUjKLvT0x_jbbT_Q8hlHE9hy3oHj2lBOJdH2avOkBu05TiwwKaug7iPdwxh8fDB61UGJHk" />
-							<div className="p-5">
-								<h3 className="text-lg font-bold tracking-tight">Elena Rodriguez</h3>
-								<p className="text-sm text-slate-600">Digital Art · 4.9 · from $45 per hour</p>
-							</div>
-						</Link>
-
-						<Link to="/detail" className="overflow-hidden rounded-xl bg-white shadow-sm transition-transform hover:-translate-y-1">
-							<img alt="Artist 2" className="aspect-square w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArmZaxlndliiveR4nlae5HTL9JUawQGcP8NHjjJENmccQ6Sv0d8BI2-8YvGzXnn62ZKVjQ2eynhifs9ZPAZo5t71l9CqbE4ZDViaiKqJ3ypipXjR1v45l7MOmHruRrjaNfjYBe3vFSrDjxTD0JQiXnz41ZHHmXBdc73sTHgaFRjCBgg04yvMaLsAMuymTjjsl6Nke-4xgtNJjeSZ_uunv7BVWGmSbdEXTawJgMJbLhrBhfBrp_Xyej1JGc4Wgyo2yABxE0kyDRJDQ" />
-							<div className="p-5">
-								<h3 className="text-lg font-bold tracking-tight">Marcus Thorne</h3>
-								<p className="text-sm text-slate-600">Illustration · 5.0 · from $60 per hour</p>
-							</div>
-						</Link>
-
-						<Link to="/detail" className="overflow-hidden rounded-xl bg-white shadow-sm transition-transform hover:-translate-y-1">
-							<img alt="Artist 3" className="aspect-square w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBElGDdvpeREyRcDNOlu_ZJ1hhe-U1o4Y059-htMtvEcKQyJm3anYq3pM-GzHExXZNxuFavZxNKJnZvEyfQf6b4I8cUQ-0sj5fv6LkbyKq2zzC_ZnnajpdhRgOKenK_iz1gzR4vBTXU8knYjawwJEn6XHYyTuNHEJ-uUDUT5sA83QwBqoKgRmOxSDvlKMs9xqqANZBBV5nbVtA1xnXvOFLcgwqNCIRKz-t3fiqxobKwozfIkOvbiCdDNsGy-Ycpc1pHdlThAU9001M" />
-							<div className="p-5">
-								<h3 className="text-lg font-bold tracking-tight">Sophia Chen</h3>
-								<p className="text-sm text-slate-600">Photography · 4.8 · from $85 per hour</p>
-							</div>
-						</Link>
+						{filteredArtists.map((artist) => (
+							<Link key={artist.id} to={`/detail/${artist.id}`} className="overflow-hidden rounded-xl bg-white shadow-sm transition-transform hover:-translate-y-1">
+								<img alt={artist.name} className="aspect-square w-full object-cover" src={artist.imageUrl} />
+								<div className="p-5">
+									<h3 className="text-lg font-bold tracking-tight">{artist.name}</h3>
+									<p className="text-sm text-slate-600">
+										{artist.category} · {artist.rating.toFixed(1)} · from ${artist.hourlyRate} per hour
+									</p>
+								</div>
+							</Link>
+						))}
 					</div>
+					{!loading && !error && filteredArtists.length === 0 && (
+						<p className="mt-6 rounded-lg bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
+							No hay artistas para mostrar. Verifica que exista la tabla artists en Neon y que tenga datos.
+						</p>
+					)}
 
 					<div className="mt-12 flex justify-center gap-2">
 						<button className="h-10 w-10 rounded-lg bg-slate-100">1</button>

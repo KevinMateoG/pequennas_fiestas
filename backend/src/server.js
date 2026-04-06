@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { checkDbConnection, sql } = require("./config/db");
+const artistsRoutes = require("./modules/artists/artists.routes");
+const { errorHandler } = require("./middlewares/errorHandler");
 
 const app = express();
 
@@ -24,6 +26,29 @@ app.get("/health/db", async (_req, res, next) => {
     next(error);
   }
 });
+
+app.get("/api/db/tables", async (_req, res, next) => {
+  try {
+    const tables = await sql`
+      select table_name
+      from information_schema.tables
+      where table_schema = 'public'
+      and table_type = 'BASE TABLE'
+      order by table_name
+    `;
+
+    res.json({
+      ok: true,
+      count: tables.length,
+      data: tables.map((table) => table.table_name),
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use("/api/artists", artistsRoutes);
+app.use(errorHandler);
 
 async function startServer() {
   try {

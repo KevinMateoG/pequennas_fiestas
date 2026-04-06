@@ -13,7 +13,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/detail" element={<ArtistDetailsPage />} />
+        <Route path="/detail/:id" element={<ArtistDetailsPage />} />
+        <Route path="/detail" element={<Navigate to="/catalog" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer></Footer>
