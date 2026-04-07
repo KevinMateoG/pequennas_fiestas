@@ -21,8 +21,8 @@ export default function LoginForm() {
         setIsLoading(true)
 
         try {
-            const signInResponse = await authClient.signIn(email, password)
-            console.log(signInResponse)
+            const response = await authClient.signIn(email, password)
+            console.log(response)
             setEmail('')
             setPassword('')
         } catch (err){
