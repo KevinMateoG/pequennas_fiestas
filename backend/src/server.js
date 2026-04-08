@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import "dotenv/config"
+import "dotenv/config";
 
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./config/auth.js";
@@ -19,10 +19,10 @@ app.use(
   })
 );
 
-app.use("/api/auth", toNodeHandler(auth))
+app.use("/api/auth", toNodeHandler(auth));
+app.use("/api/onboarding", onboardingRouter);
+app.use("/api/artists", artistsRouter);
 
-app.use("/api/onboarding", onboardingRouter)
-app.use("/api/artists", artistsRouter)
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.get("/health/db", async (_req, res, next) => {
