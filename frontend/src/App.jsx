@@ -1,11 +1,23 @@
 import './App.css'
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
+import CatalogPage from './pages/CatalogPage'
 import HomePage from './pages/HomePage'
+import ArtistDetailsPage from './pages/ArtistDetailsPage'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
 function App() {
-
   return (
     <>
-      <HomePage />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/detail/:id" element={<ArtistDetailsPage />} />
+        <Route path="/detail" element={<Navigate to="/catalog" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Footer></Footer>
     </>
   )
 }
