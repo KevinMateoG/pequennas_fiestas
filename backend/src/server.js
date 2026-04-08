@@ -5,6 +5,7 @@ import "dotenv/config"
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./config/auth.js";
 import { onboardingRouter } from "./modules/auth/onboarding.routes.js";
+import { artistsRouter } from "./modules/artists/artists.routes.js";
 
 const app = express();
 
@@ -19,9 +20,10 @@ app.use(
 
 app.use("/api/auth", toNodeHandler(auth))
 
-app.use(express.json());
+// app.use(express.json)
 
 app.use("/api/onboarding", onboardingRouter)
+app.use("/api/artists", artistsRouter)
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.listen(process.env.PORT ?? 3000, () => {
