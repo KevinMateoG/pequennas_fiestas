@@ -1,8 +1,9 @@
 import { useState } from "react";
 import authClient from "../../lib/authClient";
-
+import { useForm } from "react-hook-form";
 
 export default function RegisterForm(){
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -11,7 +12,7 @@ export default function RegisterForm(){
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const handleSubmit= async (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
         setError('')
@@ -55,28 +56,28 @@ export default function RegisterForm(){
     const updateConfirmPassword = (e) => {setConfirmPassword(e.target.value)}
     const updateRole = (e) => {setRol(e.target.value)}
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
             <div>
                 <label htmlFor="name">Name</label>
-                <input id="name" type="text" onChange={updateName} value={name}
+                <input id="name" type="text" {...register("name", { required: "Name is required" })} value={name}
                 placeholder="your name"/>
             </div>
 
             <div>
                 <label htmlFor="email">Email</label>
-                <input id="email" type="text" onChange={updateEmail} value={email}
+                <input id="email" type="text" {...register("email", { required: "Email is required" })} value={email}
                 placeholder="email@example.com"/>
             </div>
 
             <div>
                 <label htmlFor="password">Password</label>
-                <input id="password" type="text" onChange={updatePassword} value={password}
+                <input id="password" type="text" {...register("password", { required: "Password is required" })} value={password}
                 placeholder="your password"/>
             </div>
 
             <div>
                 <label htmlFor="password">Confirm password</label>
-                <input id="password" type="text" onChange={updateConfirmPassword} value={confirmPassword}
+                <input id="password" type="text" {...register("confirmPassword", { required: "Confirm Password is required" })} value={confirmPassword}
                 placeholder="your password"/>
             </div>
 

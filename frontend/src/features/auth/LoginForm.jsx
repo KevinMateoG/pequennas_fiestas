@@ -3,10 +3,8 @@ import authClient from "../../lib/authClient";
 import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
-    /*const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoading, setIsLoading] = useState('')
-    const [error, setError] = useState('');*/
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [isLoading, setIsLoading] = useState(false);

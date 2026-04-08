@@ -5,7 +5,7 @@ const authClient = {
         const reponse = await fetch(`${API_URL}/api/auth/sign-up`,{
             method: 'POST',
             headers: {
-                'Content-Type': 'applicacion/json'
+                'Content-Type': 'application/json'
             },
             credentials: 'include',
             body: JSON.stringify({email, password, name}),
@@ -23,7 +23,7 @@ const authClient = {
         const reponse = await fetch(`${API_URL}/api/auth/sign-in`,{
             method: 'POST',
             headers: {
-                'Content-Type': 'applicacion/json'
+                'Content-Type': 'application/json'
             },
             credentials: 'include',
             body: JSON.stringify({email, password}),
@@ -40,7 +40,7 @@ const authClient = {
         const reponse = await fetch(`${API_URL}/api/auth/sign-out`,{
             method: 'POST',
             headers: {
-                'Content-Type': 'applicacion/json'
+                'Content-Type': 'application/json'
             },
             credentials: 'include',
         });
@@ -56,7 +56,7 @@ const authClient = {
         const reponse = await fetch(`${API_URL}/api/auth/get-session`,{
             method: 'GET',
             headers: {
-                'Content-Type': 'applicacion/json'
+                'Content-Type': 'application/json'
             },
             credentials: 'include',
         });
@@ -71,7 +71,7 @@ const authClient = {
         const reponse = await fetch(`${API_URL}/api/onboarding/role`,{
             method: 'POST',
             headers: {
-                'Content-Type': 'applicacion/json'
+                'Content-Type': 'application/json'
             },
             credentials: 'include',
             body: JSON.stringify({role})
@@ -85,5 +85,5 @@ const authClient = {
         return reponse.json()
     }
 }
-export const {signUp, signIn, signOut, signInError} = authClient;
+export const {signUp, signIn, signOut, getSession, setRole} = authClient;
 export default authClient
