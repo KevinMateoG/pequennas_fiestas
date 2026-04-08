@@ -5,15 +5,15 @@ export default function Navbar(){
     const isAuthenticated = false;
 
     return (
-        <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md shadow-sm dark:shadow-none">
             <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
                 <div className="flex items-center gap-8">
                     <a href="/" className="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50">GigaShow</a>
 
                     <div className="hidden md:flex items-center gap-x-6">
                         <a href="#" className="text-indigo-600 dark:text-indigo-400 font-semibold font-sans antialiased tracking-tight transition-colors duration-200">Artistas</a>
-                        <a href="#" className="text-indigo-600 dark:text-indigo-400 font-semibold font-sans antialiased tracking-tight transition-colors duration-200">Categorias</a>
-                        <a href="#" className="text-indigo-600 dark:text-indigo-400 font-semibold font-sans antialiased tracking-tight transition-colors duration-200">Sobre nosotros</a>
+                        <a href="#" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 font-sans antialiased tracking-tight transition-colors duration-200">Categorias</a>
+                        <a href="#" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 font-sans antialiased tracking-tight transition-colors duration-200">Sobre nosotros</a>
                     </div>
                 </div>
 
@@ -26,7 +26,7 @@ export default function Navbar(){
                         </div>
                     ) : (
                         <div className="flex items-center gap-4">
-                            <Button variant="secondary">Acceder</Button>
+                            <Button variant="ghost">Acceder</Button>
                             <Button>Registrarse</Button>
                         </div>
                     )}
