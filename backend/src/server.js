@@ -1,6 +1,10 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import "dotenv/config"
+
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./config/auth.js";
+import { onboardingRouter } from "./modules/auth/onboarding.routes.js";
 
 const app = express();
 
@@ -13,6 +17,11 @@ app.use(
   })
 );
 
+app.use("/api/auth", toNodeHandler(auth))
+
+app.use(express.json());
+
+app.use("/api/onboarding", onboardingRouter)
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.listen(process.env.PORT ?? 3000, () => {
