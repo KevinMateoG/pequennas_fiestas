@@ -1,9 +1,23 @@
-import { dash } from "@better-auth/infra";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+
+import { db } from "./db.js";
+import * as schema from "../schemas/schema.js";
 
 export const auth = betterAuth({
   // ... your existing config
-  plugins: [
-    // ... other plugins
-    dash()
-  ]
-})
+  secret: process.env.BETTER_AUTH_SECRET,
+
+  baseURL: process.env.BACKEND_URL,
+  trustedOrigins: ["http://localhost:3000", "http://localhost:5173"],
+  basePath: "/api/auth",
+
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema,
+  }),
+
+  emailAndPassword: {
+    enabled: true,
+  },
+});
