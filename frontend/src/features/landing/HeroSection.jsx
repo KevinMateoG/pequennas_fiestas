@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import FeatureGrid from "./FeatureGrid";
+import heroImage from "@/assets/hero-image.webp";
 
 export default function HeroSection() {
     return (
@@ -22,7 +22,7 @@ export default function HeroSection() {
                             arrow_forward
                         </span>
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary-dim opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-linear-to-br from-primary to-primary-dim opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </Button>
                 <Button
                     variant="secondary"
@@ -66,11 +66,11 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            <div className="mt-16 w-full max-w-6xl aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl relative">
+            <div className="mt-16 w-full max-w-6xl aspect-video rounded-2xl overflow-hidden shadow-2xl relative">
                 <img
                     alt="Professional stage performance with dynamic lighting and talented entertainers"
                     className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoYhItraAOcavY9NVH8fdrjbxC6IxkEb1ITtSSaZ9pg5bYuBJLXiIXJxlbnf0GvaoifA7izLEufH7WeHrBY5m5iE3JKuUGf8UnBTfQ5sVvdJ7j3qWH4BCmPuy4Ij-Ei1yO-RGrUn0U3O3HvDC4HnYNVMqJucqC3xdVEaGLoPh3hxJQnk-ErfD_QFYKozJCVYjpQswzeUOv3z82Txe_T0qKc0POfO1TKZvUb6z3zp4aiT_R3TRTCBod524XM6pizykIZqH7A6lUGGI"
+                    src={heroImage}
                 />
                 <div className="absolute bottom-8 left-8 p-6 bg-white/20 backdrop-blur-xl rounded-xl border border-white/30 shadow-2xl flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/50">
