@@ -1,100 +1,151 @@
-import { useState } from "react";
-import authClient from "../../lib/authClient";
-import { useForm } from "react-hook-form";
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { signUpSchema } from './validation'
+import { authClient } from '@/lib/authClient'
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  Button,
+  Input,
+  Select,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui'
 
-export default function RegisterForm(){
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [role, setRol] = useState('cliente')
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState('')
+export const RegisterForm = ({ onSuccess }) => {
+  const [serverError, setServerError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
-    const onSubmit = async (e) => {
-        e.preventDefault();
+  const form = useForm({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      role: 'cliente',
+    },
+  })
 
-        setError('')
-
-        if (!name || !email || !password || !confirmPassword){
-            setError("Por favor completar todos los campos");
-            return
-        }
-
-        if (password.length < 6){
-            setError("La contraseña debe ser de mas de 6 caracteres")
-            return
-        }
-
-        setIsLoading(true);
-
-        try{
-            const signUpResponse = await authClient.signUp(email, password, name)
-            console.log(signUpResponse);
-
-            const roleResponse = await authClient.setRole(role)
-            console.log(roleResponse);
-
-            setName('')
-            setEmail('')
-            setPassword('')
-            setConfirmPassword('')
-            setRol('cliente')
-
-            console.log("Registro exitoso");
-        } catch (err){
-            setError(err.message || "Error al registrarse")
-        } finally {
-            setIsLoading(false)
-        }
+  const onSubmit = async (data) => {
+    console.log('✅ onSubmit ejecutado', data)
+    setServerError(null)
+    setIsLoading(true)
+    try {
+      const result = await authClient.signUp(data)
+      form.reset()
+      onSuccess?.(result)
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : 'Error en el registro')
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    const updateName = (e) => {setName(e.target.value)}
-    const updateEmail = (e) => {setEmail(e.target.value)} 
-    const updatePassword = (e) => {setPassword(e.target.value)}
-    const updateConfirmPassword = (e) => {setConfirmPassword(e.target.value)}
-    const updateRole = (e) => {setRol(e.target.value)}
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input id="name" type="text" {...register("name", { required: "Name is required" })} value={name}
-                placeholder="your name"/>
-            </div>
+  return (
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Crear cuenta</CardTitle>
+        <CardDescription>Regístrate para comenzar</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {serverError && (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 text-destructive rounded-md text-sm">
+            {serverError}
+          </div>
+        )}
+        
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
-            <div>
-                <label htmlFor="email">Email</label>
-                <input id="email" type="text" {...register("email", { required: "Email is required" })} value={email}
-                placeholder="email@example.com"/>
-            </div>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nombre completo</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Juan Pérez"
+                    autoComplete="name"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage>{form.formState.errors.name?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
 
-            <div>
-                <label htmlFor="password">Password</label>
-                <input id="password" type="text" {...register("password", { required: "Password is required" })} value={password}
-                placeholder="your password"/>
-            </div>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="tu@email.com"
+                    autoComplete="email"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage>{form.formState.errors.email?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
 
-            <div>
-                <label htmlFor="password">Confirm password</label>
-                <input id="password" type="text" {...register("confirmPassword", { required: "Confirm Password is required" })} value={confirmPassword}
-                placeholder="your password"/>
-            </div>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contraseña</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Min. 8 caracteres, 1 mayúscula, 1 número"
+                    autoComplete="new-password"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage>{form.formState.errors.password?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
 
-            <div>
-                <label htmlFor="role">type of counte</label>
-                <select id="role" value={role} onChange={updateRole}>
-                    <option value="cliente">Cliente</option>
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rol</FormLabel>
+                <FormControl>
+                  <Select disabled={isLoading} {...field}>
+                    <option value="">Selecciona un rol</option>
                     <option value="artista">Artista</option>
-                </select>
-            </div>
-            {error && (<div>
-                <p>{error}</p>
-            </div>)}
+                    <option value="cliente">Cliente</option>
+                  </Select>
+                </FormControl>
+                <FormMessage>{form.formState.errors.role?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
 
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Registrando...' : 'Registrarse'}
-            </button>
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? 'Registrando...' : 'Registrarse'}
+          </Button>
+
         </form>
-    )
+      </CardContent>
+    </Card>
+  )
 }

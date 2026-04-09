@@ -1,89 +1,66 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
-const authClient = {
-    async signUP(email,password, name) {
-        const reponse = await fetch(`${API_URL}/api/auth/sign-up`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({email, password, name}),
-        });
+export const authClient = {
+  async signUp(data) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/sign-up/email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      credentials: 'include',
+    })
 
-        if (!reponse.ok) {
-            const error = await reponse.json()
-            console.log(error)
-            throw new Error(Error.message || 'Error al registrarse')
-        }
-        return reponse.json()
-    },
-
-    async signIn(email, password) {
-        const reponse = await fetch(`${API_URL}/api/auth/sign-in`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({email, password}),
-        });
-        if (!reponse.ok) {
-            const error = await reponse.json()
-            console.log(error)
-            throw new Error(Error.message || 'Error al registrarse')
-        }
-        return reponse.json()
-    },
-
-    async signOut() {
-        const reponse = await fetch(`${API_URL}/api/auth/sign-out`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-        });
-        if (!reponse.ok) {
-            const error = await reponse.json()
-            console.log(error)
-            throw new Error(Error.message || 'Error al registrarse')
-        }
-        return reponse.json()
-    },
-
-    async getSession() {
-        const reponse = await fetch(`${API_URL}/api/auth/get-session`,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-        });
-        if (!reponse.ok) {
-            const error = await reponse.json()
-            throw new Error(Error.message || 'Error al registrarse')
-        }
-        return reponse.json()
-    },
-
-    async setRol(role) {
-        const reponse = await fetch(`${API_URL}/api/onboarding/role`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({role})
-            }
-        )
-
-        if (!reponse.ok) {
-            const error = await reponse.json()
-            throw new Error(Error.message || 'Error al registrarse')
-        }
-        return reponse.json()
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Error al registrarse')
     }
+
+    return await response.json()
+  },
+
+  async signIn(data) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/sign-in/email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Error al iniciar sesión')
+    }
+
+    return await response.json()
+  },
+
+  async getSession() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        return null
+      }
+
+      return await response.json()
+    } catch {
+      return null
+    }
+  },
+
+  async signOut() {
+    try {
+      await fetch(`${API_BASE_URL}/api/auth/sign-out`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error)
+    }
+  },
 }
-export const {signUp, signIn, signOut, getSession, setRole} = authClient;
-export default authClient
