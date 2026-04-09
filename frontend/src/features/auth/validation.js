@@ -17,3 +17,15 @@ export const signInSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(1, 'La contraseña es requerida'),
 })
+
+export const artistProfileSchema = z.object({
+  Image: z.string().url('Debe ser una URL válida').optional(),
+  bio: z.string().min(10, 'La biografía debe tener al menos 10 caracteres').max(500),
+  contactPhone: z.string().min(7, 'Telefono invalido'),
+  baseRate: z.coerce.number().positive('La tarifa base debe ser mayot a 0'),
+  city: z.string().min(2, 'Ingresa tu ciudad'),
+  converageArea: z.string().min(2, 'Ingresa tu área de cobertura'),
+  category: z.enum(['música', 'animación', 'talleres', 'otros'], {
+    errorMap: () => ({ message: 'Selecciona una categoría válida' }),
+  }),  
+})
