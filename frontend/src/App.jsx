@@ -1,16 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { LoginForm } from './features/auth/LoginForm'
-import { RegisterForm } from './features/auth/RegisterForm'
-function App() {
-  const [count, setCount] = useState(0)
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
+import CatalogPage from './pages/CatalogPage'
+import HomePage from './pages/HomePage'
+import ArtistDetailsPage from './pages/ArtistDetailsPage'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
+function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
-      <LoginForm onSuccess={(data) => console.log('Login exitoso:', data)} />
-    </div> )
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/detail/:id" element={<ArtistDetailsPage />} />
+        <Route path="/detail" element={<Navigate to="/catalog" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Footer></Footer>
+    </>
+  )
 }
 
 export default App

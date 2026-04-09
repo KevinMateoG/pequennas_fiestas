@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cva } from "class-variance-authority";
-import { Slot } from "@radix-ui/react-slot"
+import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
@@ -61,4 +61,8 @@ function Button({
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
+<<<<<<< HEAD
 export { Button, buttonVariants }
+=======
+export { Button, buttonVariants }
+>>>>>>> origin/develop
