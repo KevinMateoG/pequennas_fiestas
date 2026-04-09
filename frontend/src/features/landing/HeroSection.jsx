@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-image.webp";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroSection() {
+    const navigate = useNavigate();
+
     return (
         <section className="pt-32 pb-16 max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
             <h1 className="headline-sm md:text-7xl font-semibold tracking-tighter text-on-surface max-w-5xl leading-[1.1] mb-8">
@@ -15,7 +18,7 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
-                <Button className="group relative px-10 py-5 h-auto bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                <Button onClick={() => navigate('/catalog')} className="group relative px-10 py-5 h-auto bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
                     <span className="text-primary-foreground relative z-10 flex items-center gap-2">
                         Explorar Artistas
                         <span className="material-symbols-outlined text-xl">
