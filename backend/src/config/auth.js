@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { db } from "./db.js";
-import * as schema from "./schema.js";
+import * as schema from "../schemas/schema.js";
 
 export const auth = betterAuth({
   // ... your existing config
@@ -14,10 +14,19 @@ export const auth = betterAuth({
 
   database: drizzleAdapter(db, {
     provider: "pg",
-    schema,
+    schema: schema,
   }),
 
   emailAndPassword: {
     enabled: true,
   },
-});
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "cliente",
+        input: true
+      }
+    },
+  }});

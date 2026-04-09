@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { randomUUID } from "node:crypto"
 
 import {db} from "../../config/db.js"
-import { user, artistProfiles } from "../../config/schema.js";
+import { user, artistProfiles } from "../../schemas/schema.js";
 import { auth } from "../../config/auth.js";
 
 export const onboardingRouter = express.Router()
