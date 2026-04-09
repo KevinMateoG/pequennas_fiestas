@@ -24,17 +24,18 @@ import { authClient } from '../../lib/authClient'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const CATEGORIES = [
-    { value: 'musica_en_vivo', label: 'Música en vivo' },
+    { value: 'musica', label: 'Música en vivo' },
     { value: 'teatro', label: 'Teatro' },
     { value: 'talleres', label: 'Talleres' },
-    { value: 'dj_set', label: 'DJ' },
+    { value: 'dj', label: 'DJ' },
     { value: 'otros', label: 'Otros' },
-    { value: 'fotografia', label: 'Fotografía' },
     { value: 'animacion_infantil', label: 'Animación infantil' }
 ]
 
 
 export default function ArtistProfileForm({userId, onSuccess}) {
+    console.log(userId);
+    
     const [serverError, setServerError] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [imagePreview, setImagePreview] = useState(null)
@@ -87,8 +88,10 @@ export default function ArtistProfileForm({userId, onSuccess}) {
     }
 
     const onSubmit = async (data) => {
+        
         setServerError(null)
         setIsLoading(true)
+        console.log('✅ onSubmit ejecutado', data)
         try {
             if (imageFile) {
                 const imageUrl = await uploadImageToS3(imageFile)
@@ -113,7 +116,7 @@ export default function ArtistProfileForm({userId, onSuccess}) {
         } finally {
             setIsLoading(false)
         }}
-
+        console.log('Errores de validación:', form.formState.errors)
         return(
         <Card className="w-full max-w-lg">
         <CardHeader>

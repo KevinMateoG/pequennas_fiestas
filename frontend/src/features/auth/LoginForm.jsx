@@ -17,8 +17,9 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui'
-
+import { useNavigate } from 'react-router-dom'
 export const LoginForm = ({ onSuccess }) => {
+  const navigate = useNavigate()
   const [serverError, setServerError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -36,7 +37,10 @@ export const LoginForm = ({ onSuccess }) => {
     try {
       const result = await authClient.signIn(data)
       form.reset()
+      navigate('/catalog')
       onSuccess?.(result)
+      console.log(result);
+      
     } catch (error) {
       setServerError(error instanceof Error ? error.message : 'Error al iniciar sesión')
     } finally {

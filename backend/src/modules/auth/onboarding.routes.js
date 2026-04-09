@@ -50,3 +50,31 @@ onboardingRouter.post("/role", async (req, res) => {
         return res.status(500).json({error: "Internal Server Error"})
     }
 })
+
+onboardingRouter.post("/artist-profile", async (req, res) => {
+  try {
+    const { userId, bio, contactPhone, contactSocial, baseRate, city, coverageArea, category } = req.body
+
+    if (!userId) return res.status(400).json({ error: 'userId requerido' })
+
+    const [profile] = await db
+      .insert(artistProfiles)
+      .values({
+        id: randomUUID(),
+        userId,
+        bio,
+        contactPhone,
+        contactSocial,
+        baseRate,
+        city,
+        converageArea: coverageArea, // typo original del schema
+        category,
+      })
+      .returning()
+
+    res.status(201).json(profile)
+  } catch (error) {
+    console.error('Error guardando perfil:', error)
+    res.status(500).json({ error: 'Error al guardar el perfil' })
+  }
+})

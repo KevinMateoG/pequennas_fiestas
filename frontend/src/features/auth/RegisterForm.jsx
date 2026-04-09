@@ -22,6 +22,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 export const RegisterForm = ({ onSuccess }) => {
+  const navigate = useNavigate()
   const [serverError, setServerError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -41,7 +42,7 @@ export const RegisterForm = ({ onSuccess }) => {
     setIsLoading(true)
     try {
       const result = await authClient.signUp(data)
-      sessionStorage.setItem('user', JSON.stringify(result.user))
+      sessionStorage.setItem('pending_user', JSON.stringify(result.user))
       if (data.role === 'artista') {
         navigate('/onboarding/artista')
       } else {
