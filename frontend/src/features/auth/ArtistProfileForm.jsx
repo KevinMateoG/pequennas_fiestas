@@ -1,6 +1,3 @@
-
-
-
 import {
   FormField,
   FormItem,
@@ -16,9 +13,12 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui'
-import { use } from 'react'
-import { set } from 'zod'
-import { de } from 'zod/v4/locales'
+
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { artistProfileSchema } from './validation'
+import { useRef } from 'react'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
@@ -92,7 +92,180 @@ export default function ArtistProfileForm({userId, onSuccess}) {
             setIsLoading(false)
         }}
         return(
-            <>
-            </>
-        )
+        <Card className="w-full max-w-lg">
+        <CardHeader>
+            <CardTitle>Completa tu perfil de artista</CardTitle>
+            <CardDescription>Esta información será visible para tus clientes</CardDescription>
+        </CardHeader>
+        <CardContent>
+            {serverError && (
+            <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 text-destructive rounded-md text-sm">
+                {serverError}
+            </div>
+            )}
+
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+
+            {/* Imagen de perfil */}
+            <div className="flex flex-col items-center gap-3">
+                <div
+                onClick={() => fileInputRef.current?.click()}
+                className="w-24 h-24 rounded-full border-2 border-dashed border-input bg-muted flex items-center justify-center cursor-pointer overflow-hidden hover:border-ring transition-colors"
+                >
+                {imagePreview
+                    ? <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                    : <span className="text-xs text-muted-foreground text-center px-2">Subir foto</span>
+                }
+                </div>
+                <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+                />
+            </div>
+
+            {/* Bio */}
+            <FormField
+                control={form.control}
+                name="bio"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Biografía</FormLabel>
+                    <FormControl>
+                    <textarea
+                        placeholder="Cuéntale a tus clientes quién eres y qué ofreces..."
+                        disabled={isLoading}
+                        rows={4}
+                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/20 disabled:opacity-50 resize-none"
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage>{form.formState.errors.bio?.message}</FormMessage>
+                </FormItem>
+                )}
+            />
+
+            {/* Categoría */}
+            <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Categoría</FormLabel>
+                    <FormControl>
+                    <Select disabled={isLoading} {...field}>
+                        <option value="">Selecciona una categoría</option>
+                        {CATEGORIES.map(({ value, label }) => (
+                        <option key={value} value={value}>{label}</option>
+                        ))}
+                    </Select>
+                    </FormControl>
+                    <FormMessage>{form.formState.errors.category?.message}</FormMessage>
+                </FormItem>
+                )}
+            />
+
+            {/* Tarifa base */}
+            <FormField
+                control={form.control}
+                name="baseRate"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Tarifa base (COP)</FormLabel>
+                    <FormControl>
+                    <Input
+                        type="number"
+                        placeholder="150000"
+                        disabled={isLoading}
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage>{form.formState.errors.baseRate?.message}</FormMessage>
+                </FormItem>
+                )}
+            />
+
+            {/* Ciudad */}
+            <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Ciudad</FormLabel>
+                    <FormControl>
+                    <Input placeholder="Medellín" disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage>{form.formState.errors.city?.message}</FormMessage>
+                </FormItem>
+                )}
+            />
+
+            {/* Área de cobertura */}
+            <FormField
+                control={form.control}
+                name="coverageArea"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Área de cobertura</FormLabel>
+                    <FormControl>
+                    <Input
+                        placeholder="Antioquia y Eje Cafetero"
+                        disabled={isLoading}
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage>{form.formState.errors.coverageArea?.message}</FormMessage>
+                </FormItem>
+                )}
+            />
+
+            {/* Teléfono */}
+            <FormField
+                control={form.control}
+                name="contactPhone"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Teléfono de contacto</FormLabel>
+                    <FormControl>
+                    <Input
+                        type="tel"
+                        placeholder="+57 300 000 0000"
+                        autoComplete="tel"
+                        disabled={isLoading}
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage>{form.formState.errors.contactPhone?.message}</FormMessage>
+                </FormItem>
+                )}
+            />
+
+            {/* Red social */}
+            <FormField
+                control={form.control}
+                name="contactSocial"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Red social <span className="text-muted-foreground">(opcional)</span></FormLabel>
+                    <FormControl>
+                    <Input
+                        placeholder="https://instagram.com/tu-perfil"
+                        disabled={isLoading}
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage>{form.formState.errors.contactSocial?.message}</FormMessage>
+                </FormItem>
+                )}
+            />
+
+            <Button type="submit" disabled={isLoading} className="w-full">
+                {isLoading ? 'Guardando perfil...' : 'Guardar perfil'}
+            </Button>
+            </form>
+        </CardContent>
+        </Card>
+    )
 }
