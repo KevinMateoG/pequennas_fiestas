@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { artistProfileSchema } from './validation'
 import { useRef } from 'react'
+import { authClient } from '../../lib/authClient'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
@@ -61,50 +62,58 @@ export default function ArtistProfileForm({userId, onSuccess}) {
         setImagePreview(URL.createObjectURL(file))
     }
 
-    const updloadImageToS3 = async (file) => {
-        // subir la imagen a s3
+    const uploadImageToS3 = async (file) => {
+        const response = await fetch(`${API_BASE_URL}/api/upload/presigned-url`, {
+            method: 'POST',
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ fileType: file.type }),
+        })
+
+        if (!response.ok) {
+            throw new Error('Error al obtener la URL de carga')
+        }
+        
+        const { uploadUrl, fileUrl } = await response.json()
+
+        const uploadResponse = await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: { "content-type": file.type },
+            body: file,
+        })
+        if (!uploadResponse.ok) {
+            throw new Error('Error al subir la imagen')
+        }
+        return fileUrl
     }
 
     const onSubmit = async (data) => {
         setServerError(null)
         setIsLoading(true)
         try {
-            let imageUrl = data.image
             if (imageFile) {
-                imageUrl = await uploadImageToS3(imageFile)
-            }
-            const imageRes = await fetch(`${API_BASE_URL}/api/auth/update-user`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ image:imageUrl })
-                }
-            )
-
-            if (!imageRes.ok) {
-                const errorData = await imageRes.json()
-                throw new Error(errorData.message || 'Error al actualizar el perfil')
+                const imageUrl = await uploadImageToS3(imageFile)
+                await authClient.updateImageUser(imageUrl)
             }
 
-            const response = await fetch(`${API_BASE_URL}/api/auth/artist-profile`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, bio: data.bio, contactPhone: data.contactPhone, 
-                    contactSocial: data.contactSocial, baseRate: data.baseRate, city: data.city, 
-                    coverageArea: data.coverageArea, category: data.category}),
+            await authClient.updateArtistProfile({
+                userId,
+                bio: data.bio,
+                contactPhone: data.contactPhone,
+                contactSocial: data.contactSocial,
+                baseRate: data.baseRate,
+                city: data.city,
+                coverageArea: data.coverageArea,
+                category: data.category
             })
-            if (!response.ok) {
-                const errorData = await response.json()
-                throw new Error(errorData.message || 'Error al actualizar el perfil')
-            }
-            onSuccess?.(await response.json())
+            
+            onSuccess?.()
 
         } catch (error) {
             setServerError(error instanceof Error ? error.message : 'Error al actualizar el perfil')
         } finally {
             setIsLoading(false)
         }}
+
         return(
         <Card className="w-full max-w-lg">
         <CardHeader>
