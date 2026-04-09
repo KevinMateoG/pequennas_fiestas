@@ -1,15 +1,33 @@
 import { useState } from "react"
 import authClient from "../../lib/authClient";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  Button,
+  Input,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "../ui";
+
 
 const formSchema = z.object({
     email: z.string().email({ message: "Email no es valido" }),
     password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
 })
 
-export default function LoginForm() {
+export default function LoginForm({onSuccess}) {
+    const [serverError, setServerError] = useState(null)
+    const { signIn,loading } = authClient();
     const form = useForm<z.infer<typeof formSchema>>({ resolver: zodResolver(formSchema),
         defaultValues: {
             email: '',
