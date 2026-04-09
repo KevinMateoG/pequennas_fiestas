@@ -73,18 +73,32 @@ export default function ArtistProfileForm({userId, onSuccess}) {
             if (imageFile) {
                 imageUrl = await uploadImageToS3(imageFile)
             }
-            const response = await fetch(`${API_BASE_URL}/onboarding/artist-profile`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                credentials: 'include',
-                body: JSON.stringify({...data,image: imageUrl})
+            const imageRes = await fetch(`${API_BASE_URL}/api/auth/update-user`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ image:imageUrl })
+                }
+            )
+
+            if (!imageRes.ok) {
+                const errorData = await imageRes.json()
+                throw new Error(errorData.message || 'Error al actualizar el perfil')
+            }
+
+            const response = await fetch(`${API_BASE_URL}/api/auth/artist-profile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, bio: data.bio, contactPhone: data.contactPhone, 
+                    contactSocial: data.contactSocial, baseRate: data.baseRate, city: data.city, 
+                    coverageArea: data.coverageArea, category: data.category}),
             })
             if (!response.ok) {
                 const errorData = await response.json()
                 throw new Error(errorData.message || 'Error al actualizar el perfil')
             }
-            const result = await response.json()
-            onSuccess?.(result)
+            onSuccess?.(await response.json())
 
         } catch (error) {
             setServerError(error instanceof Error ? error.message : 'Error al actualizar el perfil')
@@ -241,26 +255,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
                 </FormItem>
                 )}
             />
-
-            {/* Red social */}
-            <FormField
-                control={form.control}
-                name="contactSocial"
-                render={({ field }) => (
-                <FormItem>
-                    <FormLabel>Red social <span className="text-muted-foreground">(opcional)</span></FormLabel>
-                    <FormControl>
-                    <Input
-                        placeholder="https://instagram.com/tu-perfil"
-                        disabled={isLoading}
-                        {...field}
-                    />
-                    </FormControl>
-                    <FormMessage>{form.formState.errors.contactSocial?.message}</FormMessage>
-                </FormItem>
-                )}
-            />
-
             <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading ? 'Guardando perfil...' : 'Guardar perfil'}
             </Button>
