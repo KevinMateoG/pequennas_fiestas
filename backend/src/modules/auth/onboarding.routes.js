@@ -50,3 +50,30 @@ onboardingRouter.post("/role", async (req, res) => {
         return res.status(500).json({error: "Internal Server Error"})
     }
 })
+
+onboardingRouter.put("/artist-profile", async (req, res) => {
+    try{
+        const { userId, bio, contactPhone, contactSocial, baseRate, city, converageArea, category} = req.body ?? {};
+        if (!userId){
+            return res.status(400).json({error: "Missing userId"})
+        }
+
+        const [profile] = await db.insert(artistProfiles).values({
+            id: randomUUID(),   
+            userId,
+            bio,
+            contactPhone,
+            contactSocial,
+            baseRate,
+            city,
+            converageArea,
+            category
+        }).returning();
+        
+        res.json({ok:true, profile})
+
+    } catch (err){
+        console.log(err);
+        return res.status(500).json({error: "Internal Server Error"})
+    }
+})

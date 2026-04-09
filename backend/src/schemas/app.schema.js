@@ -3,7 +3,6 @@ import { pgTable, uuid, text, boolean, timestamp, numeric } from "drizzle-orm/pg
 export const artistProfiles = pgTable("artist_profiles", {
     id: uuid("id").primaryKey(),
     userId: text("user_id").notNull().unique(),
-
     bio: text("bio"),
     contactPhone: text("contact_phone"),
     contactSocial: text("contact_social"),
