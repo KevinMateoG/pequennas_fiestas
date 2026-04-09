@@ -19,6 +19,8 @@ import {
   CardContent,
 } from '@/components/ui'
 
+import { useNavigate } from 'react-router-dom'
+
 export const RegisterForm = ({ onSuccess }) => {
   const [serverError, setServerError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -39,6 +41,13 @@ export const RegisterForm = ({ onSuccess }) => {
     setIsLoading(true)
     try {
       const result = await authClient.signUp(data)
+      sessionStorage.setItem('user', JSON.stringify(result.user))
+      if (data.role === 'artista') {
+        navigate('/onboarding/artista')
+      } else {
+        navigate('/')
+      }
+
       form.reset()
       onSuccess?.(result)
     } catch (error) {
