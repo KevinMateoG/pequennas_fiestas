@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
         setUser(null)
     }
     return (
-    <AuthContext.Provider value={{ user, isLoading, signOut }}>
+    <AuthContext.Provider value={{ user, isLoading, signOut, setUser }}>
             {children}
     </AuthContext.Provider>
     )
@@ -28,5 +28,5 @@ export function AuthProvider({ children }) {
 export function useAuth() {
     const context = useContext(AuthContext)
     if (!context) throw new Error('useAuth debe usarse dentro de AuthProvider')
-    return useContext(AuthContext)
+    return context
 }
