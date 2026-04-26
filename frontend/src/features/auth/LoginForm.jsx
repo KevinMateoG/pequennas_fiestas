@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { set, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInSchema } from './validation'
 import { authClient } from '@/lib/authClient'
@@ -18,8 +18,11 @@ import {
   CardContent,
 } from '@/components/ui'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/context/AuthContext'
+
 export const LoginForm = ({ onSuccess }) => {
   const navigate = useNavigate()
+  const { setUser } = useAuth()
   const [serverError, setServerError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -36,8 +39,9 @@ export const LoginForm = ({ onSuccess }) => {
     setIsLoading(true)
     try {
       const result = await authClient.signIn(data)
+      setUser(result.user)
       form.reset()
-      navigate('/catalog')
+      navigate('/')
       onSuccess?.(result)
       console.log(result);
       
