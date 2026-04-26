@@ -14,10 +14,19 @@ export const auth = betterAuth({
 
   database: drizzleAdapter(db, {
     provider: "pg",
-    schema,
+    schema: schema,
   }),
 
   emailAndPassword: {
     enabled: true,
   },
-});
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "cliente",
+        input: true
+      }
+    },
+  }});
