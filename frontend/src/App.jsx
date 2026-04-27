@@ -4,6 +4,7 @@ import Footer from './components/layout/Footer'
 import CatalogPage from './pages/CatalogPage'
 import HomePage from './pages/HomePage'
 import ArtistDetailsPage from './pages/ArtistDetailsPage'
+import { DashboardPage } from './pages/DashboardPage'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RegisterPage } from './pages/RegisterPage'
 import { LoginPage } from './pages/LoginPage'
@@ -17,6 +18,7 @@ function App() {
         <Route path="/catalog" element={<CatalogPage />} />
         <Route path="/detail/:id" element={<ArtistDetailsPage />} />
         <Route path="/detail" element={<Navigate to="/catalog" replace />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/login' element={<LoginPage />} />
