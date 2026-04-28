@@ -7,8 +7,12 @@ import { auth } from "./config/auth.js";
 import { checkDbConnection, sql } from "./config/db.js";
 import { onboardingRouter } from "./modules/auth/onboarding.routes.js";
 import { artistsRouter } from "./modules/artists/artists.routes.js";
+import { UploadRouter } from "./modules/upload/upload.routes.js";
+import { fileURLToPath } from 'url'
+import path from 'path'
 
 const app = express();
+
 
 app.use(express.json());
 
@@ -22,6 +26,10 @@ app.use(
 app.use("/api/auth", toNodeHandler(auth));
 app.use("/api/onboarding", onboardingRouter);
 app.use("/api/artists", artistsRouter);
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
+app.use('/api/upload', UploadRouter)
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
