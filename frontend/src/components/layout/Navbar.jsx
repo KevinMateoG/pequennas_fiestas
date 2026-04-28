@@ -42,14 +42,10 @@ export default function Navbar(){
                                         {user.name?.charAt(0).toUpperCase()}
                                     </div>
                                 )}
-                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden md:block">
-                                {user.name}
-                            </span>
-                            
                         </div>
                         <Link to="/dashboard"
                             className="text-sm font-medium text-slate-700 hover:text-indigo-600 dark:text-slate-300">
-                                Mi panel
+                                {user.name || 'Mi panel'}
                         </Link>
                         <button 
                             type="button"
