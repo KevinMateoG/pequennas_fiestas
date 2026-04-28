@@ -20,6 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { artistProfileSchema } from './validation'
 import { useRef } from 'react'
 import { authClient } from '../../lib/authClient'
+import { Form } from 'react-router-dom'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
@@ -63,29 +64,43 @@ export default function ArtistProfileForm({userId, onSuccess}) {
         setImagePreview(URL.createObjectURL(file))
     }
 
-    const uploadImageToS3 = async (file) => {
-        const response = await fetch(`${API_BASE_URL}/api/upload/presigned-url`, {
-            method: 'POST',
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ fileType: file.type }),
+    const uploadImageLocal = async (file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        const response = await fetch(`${API_BASE_URL}/api/upload/image`, {
+            method: "POST",
+            credentials: "include",
+            body: formData,
         })
-
-        if (!response.ok) {
-            throw new Error('Error al obtener la URL de carga')
-        }
+        if (!response.ok) throw new Error("Error al subir al imagen")
         
-        const { uploadUrl, fileUrl } = await response.json()
-
-        const uploadResponse = await fetch(uploadUrl, {
-            method: 'PUT',
-            headers: { "content-type": file.type },
-            body: file,
-        })
-        if (!uploadResponse.ok) {
-            throw new Error('Error al subir la imagen')
-        }
+        const { fileUrl } = await response.json()
         return fileUrl
     }
+
+    //const uploadImageToS3 = async (file) => {
+    //    const response = await fetch(`${API_BASE_URL}/api/upload/presigned-url`, {
+    //        method: 'POST',
+    //        headers: { "content-type": "application/json" },
+    //        body: JSON.stringify({ fileType: file.type }),
+    //    })
+
+    //    if (!response.ok) {
+    //        throw new Error('Error al obtener la URL de carga')
+    //    }
+    //    
+    //    const { uploadUrl, fileUrl } = await response.json()
+
+    //    const uploadResponse = await fetch(uploadUrl, {
+    //        method: 'PUT',
+    //        headers: { "content-type": file.type },
+    //        body: file,
+    //    })
+    //    if (!uploadResponse.ok) {
+    //        throw new Error('Error al subir la imagen')
+    //    }
+    //    return fileUrl
+    //}
 
     const onSubmit = async (data) => {
         
@@ -94,7 +109,8 @@ export default function ArtistProfileForm({userId, onSuccess}) {
         console.log('✅ onSubmit ejecutado', data)
         try {
             if (imageFile) {
-                const imageUrl = await uploadImageToS3(imageFile)
+                const imageUrl = await uploadImageLocal(imageFile)
+                //const imageUrl = await uploadImageToS3(imageFile)
                 await authClient.updateImageUser(imageUrl)
             }
 
