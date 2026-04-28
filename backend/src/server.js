@@ -13,7 +13,6 @@ import path from 'path'
 
 const app = express();
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 app.use(express.json());
 
@@ -28,8 +27,9 @@ app.use("/api/auth", toNodeHandler(auth));
 app.use("/api/onboarding", onboardingRouter);
 app.use("/api/artists", artistsRouter);
 
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')))
-app.use('/api/upload', uploadRouter)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
+app.use('/api/upload', UploadRouter)
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 

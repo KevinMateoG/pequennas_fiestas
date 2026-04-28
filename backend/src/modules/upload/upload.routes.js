@@ -31,9 +31,9 @@ const upload = multer({
 
 router.post('/image', upload.single('image'), (req, res) => {
     if (!req.file){
-        return req.status(400).json({error: 'No se recibio la imagen'})
+        return res.status(400).json({error: 'No se recibio la imagen'})
     }
-    const fileUrl = `${process.env.BACKEND_URL ?? 'http://localhost:3000'}/uploads/${req.file.filename}` 
+    const fileUrl = `${process.env.BACKEND_URL ?? 'http://localhost:3000'}/uploads/${req.file.filename}`
     res.json({ fileUrl })
 })
 
