@@ -21,6 +21,11 @@ export default function BookingForm({ artist }) {
 	const baseRate = parseFloat(artist?.hourlyRate || 0)
 
 	const isUserAuthorized = user && user.role === 'cliente'
+	const isArtistUser = user?.role === 'artista'
+	const modalTitle = isArtistUser ? 'Los artistas no pueden hacer reservas' : 'Accede para poder reservar'
+	const modalDescription = isArtistUser
+		? 'Si quieres gestionar eventos, usa una cuenta de cliente para crear tu reserva.'
+		: 'Para hacer una reserva, necesitas iniciar sesión con tu cuenta de cliente.'
 
 	const form = useForm({
 		defaultValues: {
@@ -285,32 +290,41 @@ export default function BookingForm({ artist }) {
 						</button>
 
 						<div className="text-center">
-							<h2 className="text-xl font-bold text-zinc-900">Accede para poder reservar</h2>
-							<p className="mt-2 text-sm text-zinc-600">
-								Para hacer una reserva, necesitas iniciar sesión con tu cuenta de cliente.
-							</p>
+							<h2 className="text-xl font-bold text-zinc-900">{modalTitle}</h2>
+							<p className="mt-2 text-sm text-zinc-600">{modalDescription}</p>
 						</div>
 
 						<div className="mt-6 flex flex-col gap-3">
-							<Button
-								onClick={() => {
-									setShowAuthModal(false)
-									navigate('/login')
-								}}
-								className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-							>
-								Iniciar sesión
-							</Button>
-							<Button
-								onClick={() => {
-									setShowAuthModal(false)
-									navigate('/register')
-								}}
-								variant="outline"
-								className="w-full rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
-							>
-								Registrarse
-							</Button>
+							{isArtistUser ? (
+								<Button
+									onClick={() => setShowAuthModal(false)}
+									className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+								>
+									Cerrar
+								</Button>
+							) : (
+								<>
+									<Button
+										onClick={() => {
+										setShowAuthModal(false)
+										navigate('/login')
+									}}
+										className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+									>
+										Iniciar sesión
+									</Button>
+									<Button
+										onClick={() => {
+										setShowAuthModal(false)
+										navigate('/register')
+									}}
+										variant="outline"
+										className="w-full rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+									>
+										Registrarse
+									</Button>
+								</>
+							)}
 						</div>
 					</div>
 				</div>
