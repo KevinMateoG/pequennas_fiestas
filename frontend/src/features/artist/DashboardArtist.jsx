@@ -41,15 +41,17 @@ export default function DashboardArtist() {
     const [bookings, setBookings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [updatingId, setUpdatingId] = useAuth(null);
+    const [updatingId, setUpdatingId] = useState(null);
     
     useEffect(() => {
     fetch(`${API_BASE_URL}/api/bookings/artist`, { credentials: "include" })
-    .then((res) => res.json())
-    .then(({ data }) => setBookings(data ?? []))
-    .catch(() => setError("No se pudieron cargar las reservas"))
-    .finally(() => setIsLoading(false));
-    }, []);
+    .then(res => res.json())
+    .then(( json ) => {
+        console.log('Booking resonse', json)
+        setBookings(json.data ?? [])
+    }).catch(() => setError('No se pudieron cargar las reservas'))
+    .finally(() => setIsLoading(false))
+    }, [])
 
     const updateStatus = async (id, status) => {
     setUpdatingId(id);
