@@ -6,7 +6,7 @@ export default function HeroSection() {
     return (
         <section className="pt-32 pb-16 max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
             <h1 className="headline-sm md:text-7xl font-semibold tracking-tighter text-on-surface max-w-5xl leading-[1.1] mb-8">
-                Talento <span class="text-primary italic">Gigante</span> en
+                Talento <span className="text-primary italic">Gigante</span> en
                 Formato Compacto para tu Próximo Evento.
             </h1>
             <p className="body-md text-lg md:text-xl text-on-surface-variant max-w-3xl leading-relaxed mb-12">
@@ -18,12 +18,12 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center gap-4">
                 <Button asChild className="group relative px-10 py-5 h-auto bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
                     <Link to="/catalog" className="text-primary-foreground relative z-10 flex items-center gap-2 whitespace-nowrap">
+                        <div className="absolute inset-0 bg-linear-to-br from-primary to-primary-dim opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         Explorar Artistas
                         <span className="material-symbols-outlined text-xl">
                             arrow_forward
                         </span>
                     </Link>
-                    <div className="absolute inset-0 bg-linear-to-br from-primary to-primary-dim opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </Button>
                 <Button
                     variant="secondary"
@@ -32,36 +32,36 @@ export default function HeroSection() {
                     Saber más
                 </Button>
             </div>
-            <div class="mt-24 w-full grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-t border-outline-variant/10">
-                <div class="flex flex-col">
-                    <span class="text-3xl font-bold text-on-surface tracking-tighter">
+            <div className="mt-24 w-full grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-t border-outline-variant/10">
+                <div className="flex flex-col">
+                    <span className="text-3xl font-bold text-on-surface tracking-tighter">
                         100%
                     </span>
-                    <span class="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
+                    <span className="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
                         Artistas Profesionales
                     </span>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-3xl font-bold text-on-surface tracking-tighter">
+                <div className="flex flex-col">
+                    <span className="text-3xl font-bold text-on-surface tracking-tighter">
                         Diversión
                     </span>
-                    <span class="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
+                    <span className="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
                         Garantizada
                     </span>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-3xl font-bold text-on-surface tracking-tighter">
+                <div className="flex flex-col">
+                    <span className="text-3xl font-bold text-on-surface tracking-tighter">
                         Ético
                     </span>
-                    <span class="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
+                    <span className="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
                         Trato Profesional
                     </span>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-3xl font-bold text-on-surface tracking-tighter">
+                <div className="flex flex-col">
+                    <span className="text-3xl font-bold text-on-surface tracking-tighter">
                         Segura
                     </span>
-                    <span class="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
+                    <span className="label-md text-on-surface-variant uppercase tracking-widest text-[10px] mt-1">
                         Contratación
                     </span>
                 </div>
