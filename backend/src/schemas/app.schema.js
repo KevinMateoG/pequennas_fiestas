@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, boolean, timestamp, numeric } from "drizzle-orm/pg-core";
-import { user } from "./auth.schema";
+import { user } from "./auth.schema.js";
 import { decimal } from "drizzle-orm/gel-core";
 
 export const artistProfiles = pgTable("artist_profiles", {
