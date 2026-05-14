@@ -39,7 +39,7 @@ export const authClient = {
 
   async getSession() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/session`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/get-session`, {
         credentials: 'include',
       })
 
