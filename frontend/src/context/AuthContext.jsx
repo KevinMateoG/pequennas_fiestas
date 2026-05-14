@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         authClient.getSession().then((session) => {
+            console.log("session resonde",session)
             setUser(session?.user || null)
             setIsLoading(false)
         })
