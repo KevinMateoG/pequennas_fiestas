@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-image.webp";
 
@@ -15,13 +16,13 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
-                <Button className="group relative px-10 py-5 h-auto bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                    <span className="text-primary-foreground relative z-10 flex items-center gap-2">
+                <Button asChild className="group relative px-10 py-5 h-auto bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                    <Link to="/catalog" className="text-primary-foreground relative z-10 flex items-center gap-2 whitespace-nowrap">
                         Explorar Artistas
                         <span className="material-symbols-outlined text-xl">
                             arrow_forward
                         </span>
-                    </span>
+                    </Link>
                     <div className="absolute inset-0 bg-linear-to-br from-primary to-primary-dim opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </Button>
                 <Button
@@ -80,7 +81,9 @@ export default function HeroSection() {
                         />
                     </div>
                     <div className="text-left">
-                        <p className="text-white font-bold text-sm">Julian R.</p>
+                        <p className="text-white font-bold text-sm">
+                            Julian R.
+                        </p>
                         <p className="text-white/80 text-xs">
                             Animador Profesional • CDMX
                         </p>
