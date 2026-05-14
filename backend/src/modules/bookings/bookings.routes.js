@@ -5,7 +5,6 @@ import { bookings } from '../../schemas/app.schema.js';
 import { user } from '../../schemas/schema.js';
 import { auth } from '../../config/auth.js';
 import { error } from 'better-auth/api';
-import { date } from 'better-auth';
 
 const router = Router()
 
