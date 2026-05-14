@@ -8,6 +8,7 @@ import { checkDbConnection, sql } from "./config/db.js";
 import { onboardingRouter } from "./modules/auth/onboarding.routes.js";
 import { artistsRouter } from "./modules/artists/artists.routes.js";
 import { UploadRouter } from "./modules/upload/upload.routes.js";
+import { bookingsRouter } from "./modules/bookings/bookings.routes.js";
 import { fileURLToPath } from 'url'
 import path from 'path'
 
@@ -30,6 +31,7 @@ app.use("/api/artists", artistsRouter);
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 app.use('/api/upload', UploadRouter)
+app.use('/api/bookings', bookingsRouter)
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
