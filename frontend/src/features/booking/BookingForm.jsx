@@ -11,16 +11,61 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 export default function BookingForm({ artist }) {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' })
+	const [calculatedHours, setCalculatedHours] = useState('')
+	const [calculatedPrice, setCalculatedPrice] = useState('')
 	const { user } = useAuth()
+
+	const baseRate = parseFloat(artist?.hourlyRate || 0)
 
 	const form = useForm({
 		defaultValues: {
 			eventDate: '',
 			eventLocation: '',
 			description: '',
-			agreedPrice: artist?.hourlyRate || '',
+			estimatedEndTime: '',
 		},
 	})
+
+	const handleTimeChange = () => {
+		const eventDate = form.getValues('eventDate')
+		const endTime = form.getValues('estimatedEndTime')
+
+		if (eventDate && endTime) {
+			const startDateTime = new Date(eventDate)
+			const startHour = startDateTime.getHours()
+			const startMinute = startDateTime.getMinutes()
+			
+			const [endHour, endMinute] = endTime.split(':').map(Number)
+
+			let hours = endHour - startHour
+			let minutes = endMinute - startMinute
+
+			if (minutes < 0) {
+				hours -= 1
+				minutes += 60
+			}
+
+			if (hours < 0) {
+				hours += 24
+			}
+
+			const totalHours = parseFloat((hours + minutes / 60).toFixed(2))
+			
+			if (totalHours <= 0) {
+				setCalculatedHours('')
+				setCalculatedPrice('')
+				return
+			}
+
+			setCalculatedHours(totalHours.toFixed(2))
+			
+			// Calculate agreed price: jobHours * baseRate
+			if (baseRate > 0) {
+				const price = (totalHours * baseRate).toFixed(2)
+				setCalculatedPrice(price)
+			}
+		}
+	}
 
 	const onSubmit = async (data) => {
 		if (!user?.id) {
@@ -28,10 +73,18 @@ export default function BookingForm({ artist }) {
 			return
 		}
 
+		if (!calculatedHours || parseFloat(calculatedHours) <= 0) {
+			setSubmitMessage({ type: 'error', text: 'La hora final debe ser después de la hora de inicio.' })
+			return
+		}
+
 		setIsSubmitting(true)
 		setSubmitMessage({ type: '', text: '' })
 
 		try {
+			const jobHoursValue = parseFloat(calculatedHours)
+			const agreedPriceValue = calculatedPrice ? parseFloat(calculatedPrice) : jobHoursValue * baseRate
+
 			const response = await fetch(`${API_BASE_URL}/api/bookings`, {
 				method: 'POST',
 				headers: {
@@ -44,7 +97,8 @@ export default function BookingForm({ artist }) {
 					eventDate: new Date(data.eventDate).toISOString(),
 					eventLocation: data.eventLocation,
 					description: data.description,
-					agreedPrice: parseFloat(data.agreedPrice),
+					jobHours: jobHoursValue,
+					agreedPrice: agreedPriceValue,
 				}),
 			})
 
@@ -56,6 +110,8 @@ export default function BookingForm({ artist }) {
 
 			setSubmitMessage({ type: 'success', text: 'Reserva creada exitosamente.' })
 			form.reset()
+			setCalculatedHours('')
+			setCalculatedPrice('')
 		} catch (error) {
 			setSubmitMessage({ type: 'error', text: error.message })
 		} finally {
@@ -74,7 +130,7 @@ export default function BookingForm({ artist }) {
 				{/* Event Date */}
 				<div className="grid gap-2">
 					<Label htmlFor="eventDate" className="text-sm font-semibold text-zinc-900">
-						Fecha del Evento
+						Fecha y Hora de Inicio
 					</Label>
 					<Input
 						id="eventDate"
@@ -86,6 +142,36 @@ export default function BookingForm({ artist }) {
 					/>
 					{form.formState.errors.eventDate && (
 						<p className="text-xs text-red-600">{form.formState.errors.eventDate.message}</p>
+					)}
+				</div>
+
+				{/* Estimated End Time */}
+				<div className="grid gap-2">
+					<Label htmlFor="estimatedEndTime" className="text-sm font-semibold text-zinc-900">
+						Hora Final Estimada
+					</Label>
+					<Input
+						id="estimatedEndTime"
+						type="time"
+						{...form.register('estimatedEndTime', {
+							required: 'La hora final es requerida',
+						})}
+						onChange={(e) => {
+							form.setValue('estimatedEndTime', e.target.value)
+							handleTimeChange()
+						}}
+						className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+					/>
+					{form.formState.errors.estimatedEndTime && (
+						<p className="text-xs text-red-600">{form.formState.errors.estimatedEndTime.message}</p>
+					)}
+					{calculatedHours && (
+						<div className="rounded-lg bg-indigo-50 p-3">
+							<p className="text-xs text-indigo-600 font-semibold">Duración estimada: {calculatedHours} horas</p>
+							{calculatedPrice && baseRate > 0 && (
+								<p className="text-xs text-indigo-600 font-semibold mt-1">Precio estimado: ${calculatedPrice}</p>
+							)}
+						</div>
 					)}
 				</div>
 
@@ -114,38 +200,13 @@ export default function BookingForm({ artist }) {
 					</Label>
 					<textarea
 						id="description"
-						placeholder="Describe tu evento, tema, duración aproximada, etc."
+						placeholder="Describe tu evento, tema, requerimientos especiales, etc."
 						{...form.register('description')}
 						rows={4}
 						className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
 					/>
 					{form.formState.errors.description && (
 						<p className="text-xs text-red-600">{form.formState.errors.description.message}</p>
-					)}
-				</div>
-
-				{/* Agreed Price */}
-				<div className="grid gap-2">
-					<Label htmlFor="agreedPrice" className="text-sm font-semibold text-zinc-900">
-						Precio Acordado
-					</Label>
-					<div className="flex items-center gap-2">
-						<span className="text-sm font-semibold text-zinc-500">$</span>
-						<Input
-							id="agreedPrice"
-							type="number"
-							step="0.01"
-							placeholder={artist?.hourlyRate || '0.00'}
-							{...form.register('agreedPrice', {
-								required: 'El precio es requerido',
-								min: { value: 0, message: 'El precio debe ser mayor a 0' },
-							})}
-							className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-						/>
-					</div>
-					<p className="text-xs text-zinc-500">Tarifa base: ${artist?.hourlyRate || '0.00'} / hora</p>
-					{form.formState.errors.agreedPrice && (
-						<p className="text-xs text-red-600">{form.formState.errors.agreedPrice.message}</p>
 					)}
 				</div>
 			</div>
@@ -168,14 +229,18 @@ export default function BookingForm({ artist }) {
 				<Button
 					type="button"
 					variant="outline"
-					onClick={() => form.reset()}
+					onClick={() => {
+						form.reset()
+						setCalculatedHours('')
+						setCalculatedPrice('')
+					}}
 					className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
 				>
 					Cancelar
 				</Button>
 				<Button
 					type="submit"
-					disabled={isSubmitting}
+					disabled={isSubmitting || !calculatedHours}
 					className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
 				>
 					{isSubmitting ? 'Reservando...' : 'Crear Reserva'}
@@ -184,3 +249,4 @@ export default function BookingForm({ artist }) {
 		</form>
 	)
 }
+

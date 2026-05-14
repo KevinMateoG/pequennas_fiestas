@@ -22,7 +22,8 @@ export const bookings = pgTable("bookings", {
     eventDate: timestamp('event_date').notNull(),
     eventLocation: text('event_location').notNull(),
     description: text('description'),
-    agreedPrice: decimal('agreed_price', {precision:10,scale:2}).notNull(),
+    jobHours: numeric('job_hours', {precision:5, scale:2}),
+    agreedPrice: decimal('agreed_price', {precision:10,scale:2}),
     status: text('status').notNull().default('pendiente'),
     createdAt: timestamp('create_at').notNull().defaultNow(),
     updatedAt: timestamp('update_at').notNull().defaultNow()
