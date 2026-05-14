@@ -1,6 +1,7 @@
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
+import DashboardArtist from '@/features/artist/DashboardArtist'
 
 export function DashboardPage() {
   const { user, isLoading } = useAuth()
@@ -27,6 +28,10 @@ export function DashboardPage() {
     return <Navigate to="/login" replace />
   }
 
+  if (user.role === 'artista') {
+    return <DashboardArtist/>
+  }
+  
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#fbf8ff] px-4 pt-28 pb-16 text-[#2e3145]">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
