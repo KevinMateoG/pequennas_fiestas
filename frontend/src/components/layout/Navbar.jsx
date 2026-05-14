@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar(){
-    // TODO: conectar la base de datos para verificar una sesión activa
     const isAuthenticated = false;
     const { user, isLoading, signOut } = useAuth();
     const navigate = useNavigate();
@@ -27,7 +26,6 @@ export default function Navbar(){
 
                 <div>
                     {isLoading ? (
-                        // TODO: Definir concepto de navbar cuando hay una sesión activa
                         <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse" />
                     ) : user ? (
                         <div className="flex items-center gap-4">

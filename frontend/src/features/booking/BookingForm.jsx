@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -13,9 +14,13 @@ export default function BookingForm({ artist }) {
 	const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' })
 	const [calculatedHours, setCalculatedHours] = useState('')
 	const [calculatedPrice, setCalculatedPrice] = useState('')
-	const { user } = useAuth()
+	const [showAuthModal, setShowAuthModal] = useState(false)
+	const { user, isLoading } = useAuth()
+	const navigate = useNavigate()
 
 	const baseRate = parseFloat(artist?.hourlyRate || 0)
+
+	const isUserAuthorized = user && user.role === 'cliente'
 
 	const form = useForm({
 		defaultValues: {
@@ -27,6 +32,11 @@ export default function BookingForm({ artist }) {
 	})
 
 	const handleTimeChange = () => {
+		if (!isUserAuthorized) {
+			setShowAuthModal(true)
+			return
+		}
+
 		const eventDate = form.getValues('eventDate')
 		const endTime = form.getValues('estimatedEndTime')
 
@@ -59,7 +69,6 @@ export default function BookingForm({ artist }) {
 
 			setCalculatedHours(totalHours.toFixed(2))
 			
-			// Calculate agreed price: jobHours * baseRate
 			if (baseRate > 0) {
 				const price = (totalHours * baseRate).toFixed(2)
 				setCalculatedPrice(price)
@@ -67,9 +76,15 @@ export default function BookingForm({ artist }) {
 		}
 	}
 
+	const handleFormFocus = () => {
+		if (!isUserAuthorized) {
+			setShowAuthModal(true)
+		}
+	}
+
 	const onSubmit = async (data) => {
-		if (!user?.id) {
-			setSubmitMessage({ type: 'error', text: 'Debes estar autenticado para hacer una reserva.' })
+		if (!isUserAuthorized) {
+			setShowAuthModal(true)
 			return
 		}
 
@@ -120,133 +135,187 @@ export default function BookingForm({ artist }) {
 	}
 
 	return (
-		<form onSubmit={form.handleSubmit(onSubmit)} className="rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm">
-			<h2 className="text-xl font-bold tracking-tight text-zinc-900">Crear Reserva</h2>
-			<p className="mt-1 text-sm text-zinc-500">
-				Completa los detalles de tu evento para reservar a {artist.name}
-			</p>
+		<>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm">
+				<h2 className="text-xl font-bold tracking-tight text-zinc-900">Crear Reserva</h2>
+				<p className="mt-1 text-sm text-zinc-500">
+					Completa los detalles de tu evento para reservar a {artist.name}
+				</p>
 
-			<div className="mt-6 space-y-6">
-				{/* Event Date */}
-				<div className="grid gap-2">
-					<Label htmlFor="eventDate" className="text-sm font-semibold text-zinc-900">
-						Fecha y Hora de Inicio
-					</Label>
-					<Input
-						id="eventDate"
-						type="datetime-local"
-						{...form.register('eventDate', {
-							required: 'La fecha del evento es requerida',
-						})}
-						className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-					/>
-					{form.formState.errors.eventDate && (
-						<p className="text-xs text-red-600">{form.formState.errors.eventDate.message}</p>
-					)}
+				<div className="mt-6 space-y-6">
+					<div className="grid gap-2">
+						<Label htmlFor="eventDate" className="text-sm font-semibold text-zinc-900">
+							Fecha y Hora de Inicio
+						</Label>
+						<Input
+							id="eventDate"
+							type="datetime-local"
+							onFocus={handleFormFocus}
+							{...form.register('eventDate', {
+								required: 'La fecha del evento es requerida',
+							})}
+							className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+						/>
+						{form.formState.errors.eventDate && (
+							<p className="text-xs text-red-600">{form.formState.errors.eventDate.message}</p>
+						)}
+					</div>
+
+					<div className="grid gap-2">
+						<Label htmlFor="estimatedEndTime" className="text-sm font-semibold text-zinc-900">
+							Hora Final Estimada
+						</Label>
+						<Input
+							id="estimatedEndTime"
+							type="time"
+							onFocus={handleFormFocus}
+							{...form.register('estimatedEndTime', {
+								required: 'La hora final es requerida',
+							})}
+							onChange={(e) => {
+								form.setValue('estimatedEndTime', e.target.value)
+								handleTimeChange()
+							}}
+							className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+						/>
+						{form.formState.errors.estimatedEndTime && (
+							<p className="text-xs text-red-600">{form.formState.errors.estimatedEndTime.message}</p>
+						)}
+						{calculatedHours && (
+							<div className="rounded-lg bg-indigo-50 p-3">
+								<p className="text-xs text-indigo-600 font-semibold">Duración estimada: {calculatedHours} horas</p>
+								{calculatedPrice && baseRate > 0 && (
+									<p className="text-xs text-indigo-600 font-semibold mt-1">Precio estimado: ${calculatedPrice}</p>
+								)}
+							</div>
+						)}
+					</div>
+
+					<div className="grid gap-2">
+						<Label htmlFor="eventLocation" className="text-sm font-semibold text-zinc-900">
+							Ubicación del Evento
+						</Label>
+						<Input
+							id="eventLocation"
+							placeholder="Ej: Calle Principal 123, Ciudad"
+							onFocus={handleFormFocus}
+							{...form.register('eventLocation', {
+								required: 'La ubicación es requerida',
+							})}
+							className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+						/>
+						{form.formState.errors.eventLocation && (
+							<p className="text-xs text-red-600">{form.formState.errors.eventLocation.message}</p>
+						)}
+					</div>
+
+					<div className="grid gap-2">
+						<Label htmlFor="description" className="text-sm font-semibold text-zinc-900">
+							Descripción del Evento
+						</Label>
+						<textarea
+							id="description"
+							placeholder="Describe tu evento, tema, requerimientos especiales, etc."
+							onFocus={handleFormFocus}
+							{...form.register('description')}
+							rows={4}
+							className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+						/>
+						{form.formState.errors.description && (
+							<p className="text-xs text-red-600">{form.formState.errors.description.message}</p>
+						)}
+					</div>
 				</div>
 
-				{/* Estimated End Time */}
-				<div className="grid gap-2">
-					<Label htmlFor="estimatedEndTime" className="text-sm font-semibold text-zinc-900">
-						Hora Final Estimada
-					</Label>
-					<Input
-						id="estimatedEndTime"
-						type="time"
-						{...form.register('estimatedEndTime', {
-							required: 'La hora final es requerida',
-						})}
-						onChange={(e) => {
-							form.setValue('estimatedEndTime', e.target.value)
-							handleTimeChange()
+				{submitMessage.text && (
+					<div
+						className={`mt-6 rounded-lg px-4 py-3 text-sm ${
+							submitMessage.type === 'success'
+								? 'border border-green-200 bg-green-50 text-green-800'
+								: 'border border-red-200 bg-red-50 text-red-800'
+						}`}
+					>
+						{submitMessage.text}
+					</div>
+				)}
+
+				<div className="mt-6 flex justify-end gap-3">
+					<Button
+						type="button"
+						variant="outline"
+						onClick={() => {
+							form.reset()
+							setCalculatedHours('')
+							setCalculatedPrice('')
 						}}
-						className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-					/>
-					{form.formState.errors.estimatedEndTime && (
-						<p className="text-xs text-red-600">{form.formState.errors.estimatedEndTime.message}</p>
-					)}
-					{calculatedHours && (
-						<div className="rounded-lg bg-indigo-50 p-3">
-							<p className="text-xs text-indigo-600 font-semibold">Duración estimada: {calculatedHours} horas</p>
-							{calculatedPrice && baseRate > 0 && (
-								<p className="text-xs text-indigo-600 font-semibold mt-1">Precio estimado: ${calculatedPrice}</p>
-							)}
+						className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+					>
+						Cancelar
+					</Button>
+					<Button
+						type="submit"
+						disabled={isSubmitting || !calculatedHours}
+						className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+					>
+						{isSubmitting ? 'Reservando...' : 'Crear Reserva'}
+					</Button>
+				</div>
+			</form>
+
+			{showAuthModal && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+					<div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg">
+						<button
+							onClick={() => setShowAuthModal(false)}
+							className="absolute right-4 top-4 text-zinc-400 hover:text-zinc-600"
+						>
+							<svg
+								className="h-6 w-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M6 18L18 6M6 6l12 12"
+								/>
+							</svg>
+						</button>
+
+						<div className="text-center">
+							<h2 className="text-xl font-bold text-zinc-900">Accede para poder reservar</h2>
+							<p className="mt-2 text-sm text-zinc-600">
+								Para hacer una reserva, necesitas iniciar sesión con tu cuenta de cliente.
+							</p>
 						</div>
-					)}
-				</div>
 
-				{/* Event Location */}
-				<div className="grid gap-2">
-					<Label htmlFor="eventLocation" className="text-sm font-semibold text-zinc-900">
-						Ubicación del Evento
-					</Label>
-					<Input
-						id="eventLocation"
-						placeholder="Ej: Calle Principal 123, Ciudad"
-						{...form.register('eventLocation', {
-							required: 'La ubicación es requerida',
-						})}
-						className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-					/>
-					{form.formState.errors.eventLocation && (
-						<p className="text-xs text-red-600">{form.formState.errors.eventLocation.message}</p>
-					)}
-				</div>
-
-				{/* Description */}
-				<div className="grid gap-2">
-					<Label htmlFor="description" className="text-sm font-semibold text-zinc-900">
-						Descripción del Evento
-					</Label>
-					<textarea
-						id="description"
-						placeholder="Describe tu evento, tema, requerimientos especiales, etc."
-						{...form.register('description')}
-						rows={4}
-						className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-					/>
-					{form.formState.errors.description && (
-						<p className="text-xs text-red-600">{form.formState.errors.description.message}</p>
-					)}
-				</div>
-			</div>
-
-			{/* Submit Messages */}
-			{submitMessage.text && (
-				<div
-					className={`mt-6 rounded-lg px-4 py-3 text-sm ${
-						submitMessage.type === 'success'
-							? 'border border-green-200 bg-green-50 text-green-800'
-							: 'border border-red-200 bg-red-50 text-red-800'
-					}`}
-				>
-					{submitMessage.text}
+						<div className="mt-6 flex flex-col gap-3">
+							<Button
+								onClick={() => {
+									setShowAuthModal(false)
+									navigate('/login')
+								}}
+								className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+							>
+								Iniciar sesión
+							</Button>
+							<Button
+								onClick={() => {
+									setShowAuthModal(false)
+									navigate('/register')
+								}}
+								variant="outline"
+								className="w-full rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+							>
+								Registrarse
+							</Button>
+						</div>
+					</div>
 				</div>
 			)}
-
-			{/* Submit Button */}
-			<div className="mt-6 flex justify-end gap-3">
-				<Button
-					type="button"
-					variant="outline"
-					onClick={() => {
-						form.reset()
-						setCalculatedHours('')
-						setCalculatedPrice('')
-					}}
-					className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
-				>
-					Cancelar
-				</Button>
-				<Button
-					type="submit"
-					disabled={isSubmitting || !calculatedHours}
-					className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
-				>
-					{isSubmitting ? 'Reservando...' : 'Crear Reserva'}
-				</Button>
-			</div>
-		</form>
+		</>
 	)
 }
 

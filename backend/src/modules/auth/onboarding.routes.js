@@ -67,7 +67,7 @@ onboardingRouter.post("/artist-profile", async (req, res) => {
         contactSocial,
         baseRate,
         city,
-        converageArea: coverageArea, // typo original del schema
+            converageArea: coverageArea,
         category,
       })
       .returning()
