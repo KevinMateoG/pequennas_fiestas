@@ -10,6 +10,7 @@ function toCatalogArtist(row) {
 
 	return {
 		id: row.id,
+		userId: row.userId,
 		name: row.name ?? "Artista",
 		category: row.category ?? "General",
 		city: row.city ?? "No definida",
@@ -26,6 +27,7 @@ export async function listArtists() {
 	const rows = await db
 		.select({
 			id: artistProfiles.id,
+				userId: artistProfiles.userId,
 			name: user.name,
 			category: artistProfiles.category,
 			city: artistProfiles.city,
@@ -45,6 +47,7 @@ export async function findArtistById(id) {
 	const rows = await db
 		.select({
 			id: artistProfiles.id,
+				userId: artistProfiles.userId,
 			name: user.name,
 			category: artistProfiles.category,
 			city: artistProfiles.city,

@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, or } from 'drizzle-orm'
 import { db } from '../../config/db.js'
-import { bookings } from '../../schemas/app.schema.js'
+import { artistProfiles, bookings } from '../../schemas/app.schema.js'
 import { user } from '../../schemas/schema.js'
 import { auth } from '../../config/auth.js'
 import {
@@ -29,13 +29,34 @@ router.post('/', async (req, res) => {
 			return res.status(400).json({ error: 'No puedes reservarte a ti mismo' })
 		}
 
-		const artistRecord = await db.select().from(user).where(eq(user.id, artistId)).limit(1)
+		const looksLikeUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(artistId)
+
+		const artistProfile = await db
+			.select({
+				profileId: artistProfiles.id,
+				userId: artistProfiles.userId,
+			})
+			.from(artistProfiles)
+			.where(
+				looksLikeUuid
+					? or(eq(artistProfiles.id, artistId), eq(artistProfiles.userId, artistId))
+					: eq(artistProfiles.userId, artistId)
+			)
+			.limit(1)
+
+		if (artistProfile.length === 0) {
+			return res.status(404).json({ error: 'Artista no encontrado' })
+		}
+
+		const artistUserId = artistProfile[0].userId
+
+		const artistRecord = await db.select().from(user).where(eq(user.id, artistUserId)).limit(1)
 		if (artistRecord.length === 0) {
 			return res.status(404).json({ error: 'Artista no encontrado' })
 		}
 
 		const bookingResult = await createBooking({
-			artistId,
+			artistId: artistUserId,
 			clientId: session.user.id,
 			eventDate,
 			eventLocation,

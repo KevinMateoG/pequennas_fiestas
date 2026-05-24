@@ -109,10 +109,10 @@ export default function BookingForm({ artist }) {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				},
+				credentials: 'include',
 				body: JSON.stringify({
-					artistId: artist.id,
+					artistId: artist.userId ?? artist.id,
 					clientId: user.id,
 					eventDate: new Date(data.eventDate).toISOString(),
 					eventLocation: data.eventLocation,
@@ -125,7 +125,7 @@ export default function BookingForm({ artist }) {
 			const payload = await response.json()
 
 			if (!response.ok) {
-				throw new Error(payload.message || 'Error al crear la reserva.')
+				throw new Error(payload.error || payload.message || 'Error al crear la reserva.')
 			}
 
 			setSubmitMessage({ type: 'success', text: 'Reserva creada exitosamente.' })
