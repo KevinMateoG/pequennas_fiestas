@@ -82,7 +82,6 @@ export default function DashboardArtist() {
     return (
     <main className="min-h-screen bg-[#f7f8fc] px-4 pt-28 pb-16">
         <div className="mx-auto max-w-5xl">
-        {/* Header */}
         <div className="mb-8">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
             Management Console
@@ -96,7 +95,6 @@ export default function DashboardArtist() {
             </p>
         </div>
 
-        {/* Stats */}
         <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border bg-white p-6 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
@@ -124,7 +122,6 @@ export default function DashboardArtist() {
             </div>
         </div>
 
-        {/* Tabla */}
         <div className="rounded-2xl border bg-white shadow-sm overflow-hidden">
             {isLoading && (
             <p className="p-8 text-center text-slate-500">

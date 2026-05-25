@@ -78,30 +78,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
         return fileUrl
     }
 
-    //const uploadImageToS3 = async (file) => {
-    //    const response = await fetch(`${API_BASE_URL}/api/upload/presigned-url`, {
-    //        method: 'POST',
-    //        headers: { "content-type": "application/json" },
-    //        body: JSON.stringify({ fileType: file.type }),
-    //    })
-
-    //    if (!response.ok) {
-    //        throw new Error('Error al obtener la URL de carga')
-    //    }
-    //    
-    //    const { uploadUrl, fileUrl } = await response.json()
-
-    //    const uploadResponse = await fetch(uploadUrl, {
-    //        method: 'PUT',
-    //        headers: { "content-type": file.type },
-    //        body: file,
-    //    })
-    //    if (!uploadResponse.ok) {
-    //        throw new Error('Error al subir la imagen')
-    //    }
-    //    return fileUrl
-    //}
-
     const onSubmit = async (data) => {
         
         setServerError(null)
@@ -110,7 +86,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
         try {
             if (imageFile) {
                 const imageUrl = await uploadImageLocal(imageFile)
-                //const imageUrl = await uploadImageToS3(imageFile)
                 await authClient.updateImageUser(imageUrl)
             }
 
@@ -147,8 +122,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
             )}
 
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
-            {/* Imagen de perfil */}
             <div className="flex flex-col items-center gap-3">
                 <div
                 onClick={() => fileInputRef.current?.click()}
@@ -167,8 +140,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
                 onChange={handleImageChange}
                 />
             </div>
-
-            {/* Bio */}
             <FormField
                 control={form.control}
                 name="bio"
@@ -188,8 +159,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
                 </FormItem>
                 )}
             />
-
-            {/* Categoría */}
             <FormField
                 control={form.control}
                 name="category"
@@ -208,8 +177,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
                 </FormItem>
                 )}
             />
-
-            {/* Tarifa base */}
             <FormField
                 control={form.control}
                 name="baseRate"
@@ -228,8 +195,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
                 </FormItem>
                 )}
             />
-
-            {/* Ciudad */}
             <FormField
                 control={form.control}
                 name="city"
@@ -243,8 +208,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
                 </FormItem>
                 )}
             />
-
-            {/* Área de cobertura */}
             <FormField
                 control={form.control}
                 name="coverageArea"
@@ -262,8 +225,6 @@ export default function ArtistProfileForm({userId, onSuccess}) {
                 </FormItem>
                 )}
             />
-
-            {/* Teléfono */}
             <FormField
                 control={form.control}
                 name="contactPhone"

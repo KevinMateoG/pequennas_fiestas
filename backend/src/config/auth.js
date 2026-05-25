@@ -5,7 +5,6 @@ import { db } from "./db.js";
 import * as schema from "../schemas/schema.js";
 
 export const auth = betterAuth({
-  // ... your existing config
   secret: process.env.BETTER_AUTH_SECRET,
 
   baseURL: process.env.BACKEND_URL,

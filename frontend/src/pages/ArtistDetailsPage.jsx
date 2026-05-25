@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import ArtistDetailsContent from '@/features/artist/ArtistDetailsContent'
 import ArtistDetailsLoading from '@/features/artist/ArtistDetailsLoading'
 import ArtistDetailsError from '@/features/artist/ArtistDetailsError'
+import BookingForm from '@/features/booking/BookingForm'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
@@ -62,6 +63,9 @@ function ArtistDetailsPage() {
 	return (
 		<main className="mx-auto min-h-screen max-w-6xl px-6 pb-14 pt-24 text-zinc-800">
 			<ArtistDetailsContent artist={artist} />
+			<div className="mt-12">
+				<BookingForm artist={artist} />
+			</div>
 		</main>
 	)
 }

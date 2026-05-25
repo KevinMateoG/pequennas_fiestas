@@ -2,7 +2,6 @@ export default function FeatureGrid() {
     return (
         <section className="max-w-7xl mx-auto px-6 py-32">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                {/* Bento Item 1 */}
                 <div className="md:col-span-8 bg-secondary/80 p-10 rounded-2xl flex flex-col justify-between overflow-hidden relative group">
                     <div className="relative z-10">
                         <h3 className="text-3xl font-bold tracking-tight mb-4">
@@ -13,7 +12,6 @@ export default function FeatureGrid() {
                         </p>
                     </div>
                 </div>
-                {/* Bento Item 2 */}
                 <div className="md:col-span-4 bg-primary p-10 rounded-2xl text-on-primary flex flex-col justify-end">
                     <span className="text-primary-foreground material-symbols-outlined text-4xl mb-6" style={{ fontVariationSettings: "'FILL' 1" }}>
                         handshake
@@ -23,7 +21,6 @@ export default function FeatureGrid() {
                         Eliminamos intermediarios informales. Garantizamos que cada artista reciba una remuneración competitiva y condiciones profesionales de producción.
                     </p>
                 </div>
-                {/* Bento Item 3 */}
                 <div className="md:col-span-4 bg-surface-container-highest p-10 rounded-2xl">
                     <h3 className="text-xl font-bold mb-4">Asesoría para Eventos</h3>
                     <p className="text-on-surface-variant text-sm leading-relaxed mb-6">
@@ -33,7 +30,6 @@ export default function FeatureGrid() {
                         Contactar consultor <span className="material-symbols-outlined text-xs">arrow_outward</span>
                     </a>
                 </div>
-                {/* Bento Item 4 */}
                 <div className="md:col-span-8 bg-white p-10 rounded-2xl border border-outline-variant/10 shadow-sm flex items-center justify-between gap-8">
                     <div className="flex-1">
                         <h3 className="text-2xl font-bold mb-2">Contratación Blindada</h3>
