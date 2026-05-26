@@ -35,7 +35,7 @@ export default function Navbar() {
                                 Artistas
                             </Link>
                         )}
-                        <Link to="/" className="font-sans tracking-tight text-slate-600 transition-colors duration-200 hover:text-indigo-600 antialiased dark:text-slate-400">
+                        <Link to="/about" className="font-sans tracking-tight text-slate-600 transition-colors duration-200 hover:text-indigo-600 antialiased dark:text-slate-400">
                             Sobre nosotros
                         </Link>
                     </div>
@@ -115,7 +115,7 @@ export default function Navbar() {
                                 Artistas
                             </Link>
                         )}
-                        <Link to="/" onClick={closeMenu} className="text-lg font-medium text-slate-600">
+                        <Link to="/about" onClick={closeMenu} className="text-lg font-medium text-slate-600">
                             Sobre nosotros
                         </Link>
                         

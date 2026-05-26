@@ -9,6 +9,10 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { RegisterPage } from './pages/RegisterPage'
 import { LoginPage } from './pages/LoginPage'
 import { OnboardingPage } from './pages/OnboardingPage'
+import AboutPage from './pages/AboutPage'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
+import ContactPage from './pages/ContactPage'
 function App() {
   return (
     <>
@@ -23,6 +27,10 @@ function App() {
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/onboarding/artista' element={<OnboardingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
       <Footer></Footer>
     </>
