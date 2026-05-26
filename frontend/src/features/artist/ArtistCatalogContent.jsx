@@ -1,4 +1,5 @@
 import ArtistCard from '@/features/artist/ArtistCard'
+import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
 export default function ArtistCatalogContent({ filteredArtists, loading, error }) {
 	return (
@@ -11,14 +12,16 @@ export default function ArtistCatalogContent({ filteredArtists, loading, error }
 				<p className="mt-2 max-w-lg text-slate-600">Connect with vetted professionals from around the globe for your next creative project.</p>
 			</div>
 
-			{loading && <p className="mb-6 rounded-lg bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">Cargando artistas...</p>}
+			{loading && <LoadingSpinner message="Cargando artistas…" fullPage={false} />}
 			{error && <p className="mb-6 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p>}
 
-			<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				{filteredArtists.map((artist) => (
-					<ArtistCard key={artist.id} artist={artist} />
-				))}
-			</div>
+			{!loading && !error && (
+				<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+					{filteredArtists.map((artist) => (
+						<ArtistCard key={artist.id} artist={artist} />
+					))}
+				</div>
+			)}
 			{!loading && !error && filteredArtists.length === 0 && (
 				<p className="mt-6 rounded-lg bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
 					No hay artistas para mostrar. Verifica que exista la tabla artists en Neon y que tenga datos.

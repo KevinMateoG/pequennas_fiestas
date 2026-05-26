@@ -32,12 +32,12 @@ function CatalogPage() {
 				const payload = await response.json()
 				const nextArtists = Array.isArray(payload.data) ? payload.data : []
 				setArtists(nextArtists)
+				setLoading(false)
 			} catch (fetchError) {
 				if (fetchError.name !== 'AbortError') {
 					setError(fetchError.message)
+					setLoading(false)
 				}
-			} finally {
-				setLoading(false)
 			}
 		}
 

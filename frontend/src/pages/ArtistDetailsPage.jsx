@@ -42,12 +42,14 @@ function ArtistDetailsPage() {
 				}
 
 				setArtist(payload.data ?? null)
+				setLoading(false)
 			} catch (fetchError) {
 				if (fetchError.name !== 'AbortError') {
 					setError(fetchError.message)
+					setLoading(false)
 				}
-			} finally {
-				setLoading(false)
+				// On abort: keep loading=true so the spinner stays visible
+				// until the re-fired fetch completes.
 			}
 		}
 
