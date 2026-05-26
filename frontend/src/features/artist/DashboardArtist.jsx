@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { get } from "react-hook-form";
+import BookingDetailModal from "@/features/booking/BookingDetailModal"
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
@@ -42,7 +43,8 @@ export default function DashboardArtist() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [updatingId, setUpdatingId] = useState(null);
-    
+    const [selectedBooking, setSelectedBooking] = useState(null);
+
     useEffect(() => {
     fetch(`${API_BASE_URL}/api/bookings/artist`, { credentials: "include" })
     .then(res => res.json())
@@ -66,6 +68,8 @@ export default function DashboardArtist() {
         setBookings((prev) =>
         prev.map((b) => (b.id === id ? { ...b, status: data.status } : b)),
         );
+        setSelectedBooking((prev)=> 
+        prev && prev.id === id ?{...prev, status: data.status}: prev);
     } catch {
         alert("Error al actualizar la reserva");
     } finally {
@@ -207,9 +211,14 @@ export default function DashboardArtist() {
                             >
                             Rechazar
                             </button>
+                            <button onClick={() => setSelectedBooking(booking)} className="rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition-colors">
+                                Detalles
+                            </button>
                         </div>
                         ) : (
-                        <span className="text-slate-400 text-xs">—</span>
+                        <button onClick={() => setSelectedBooking(booking)} className="rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition-colors">
+                            Ver detalles
+                        </button>
                         )}
                     </td>
                     </tr>
@@ -219,6 +228,14 @@ export default function DashboardArtist() {
             )}
         </div>
         </div>
+        {selectedBooking && (
+        <BookingDetailModal
+          booking={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+          onStatusChange={updateStatus}
+          isUpdating={updatingId !== null}
+        />
+      )}
     </main>
     );
 }

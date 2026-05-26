@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
+import ArtistBookingsList from './ArtistBookingsList'
 
-export default function ArtistDetailsContent({ artist }) {
+export default function ArtistDetailsContent({ artist, isOwner }) {
 	return (
 		<>
 			<Link className="mb-6 inline-block text-sm font-semibold text-indigo-600" to="/catalog">
@@ -47,6 +48,14 @@ export default function ArtistDetailsContent({ artist }) {
 			<section className="mt-8 rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm">
 				<h2 className="text-xl font-bold tracking-tight text-zinc-900">Sobre el artista</h2>
 				<p className="mt-3 leading-relaxed text-zinc-600">{artist.bio}</p>
+			</section>
+			<section className="mt-8">
+				{isOwner && (
+					<section className="mt-8">
+						<h2 className="mb-4 text-xl font-bold tracking-tight text-zinc-900">Tus Reservas</h2>
+						<ArtistBookingsList />
+					</section>
+				)}
 			</section>
 		</>
 	)
