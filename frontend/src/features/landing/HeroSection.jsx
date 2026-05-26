@@ -73,7 +73,7 @@ export default function HeroSection() {
                     className="w-full h-full object-cover"
                     src={heroImage}
                 />
-                <div className="absolute bottom-8 left-8 p-6 bg-white/20 backdrop-blur-xl rounded-xl border border-white/30 shadow-2xl flex items-center gap-4">
+                <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 p-4 sm:p-6 bg-white/20 backdrop-blur-xl rounded-xl border border-white/30 shadow-2xl flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/50">
                         <img
                             alt="Portrait of a professional performer"

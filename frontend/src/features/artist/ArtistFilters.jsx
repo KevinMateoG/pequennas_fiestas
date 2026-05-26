@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 export default function ArtistFilters({
 	availableCategories,
 	maxPrice,
@@ -10,15 +12,33 @@ export default function ArtistFilters({
 	selectedCategories,
 	minPrice,
 }) {
+	const [isOpen, setIsOpen] = useState(false)
 	const hasActiveFilters =
 		search.trim().length > 0 || selectedCategories.length > 0 || minPrice !== '' || maxPrice !== ''
 
 	return (
 		<aside className="w-full shrink-0 md:w-72">
-			<div className="sticky top-24 space-y-6 rounded-2xl border border-slate-100 bg-white p-6 shadow-md">
-				{/* ── Header ── */}
+			<button
+				onClick={() => setIsOpen(!isOpen)}
+				className="mb-4 flex w-full items-center justify-between rounded-xl border border-slate-100 bg-white p-4 font-bold tracking-tight text-[#2e3145] shadow-sm md:hidden"
+				type="button"
+			>
+				<span className="flex items-center gap-2">
+					<span className="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+							<path fillRule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 0 1 .628.74v2.288a2.25 2.25 0 0 1-.659 1.59l-4.682 4.683a2.25 2.25 0 0 0-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 0 1 8 18.25v-5.757a2.25 2.25 0 0 0-.659-1.591L2.659 6.22A2.25 2.25 0 0 1 2 4.629V2.34a.75.75 0 0 1 .628-.74Z" clipRule="evenodd" />
+						</svg>
+					</span>
+					Filtros {hasActiveFilters && <span className="text-xs font-semibold text-indigo-600">(Activos)</span>}
+				</span>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`h-5 w-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+					<path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+				</svg>
+			</button>
+
+			<div className={`sticky top-24 space-y-6 rounded-2xl border border-slate-100 bg-white p-6 shadow-md md:block ${isOpen ? 'block' : 'hidden'}`}>
 				<div className="flex items-center justify-between">
-					<h2 className="flex items-center gap-2 text-lg font-bold tracking-tight text-[#2e3145]">
+					<h2 className="hidden items-center gap-2 text-lg font-bold tracking-tight text-[#2e3145] md:flex">
 						<span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
 								<path fillRule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 0 1 .628.74v2.288a2.25 2.25 0 0 1-.659 1.59l-4.682 4.683a2.25 2.25 0 0 0-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 0 1 8 18.25v-5.757a2.25 2.25 0 0 0-.659-1.591L2.659 6.22A2.25 2.25 0 0 1 2 4.629V2.34a.75.75 0 0 1 .628-.74Z" clipRule="evenodd" />
@@ -36,9 +56,8 @@ export default function ArtistFilters({
 					</button>
 				</div>
 
-				<hr className="border-slate-100" />
+				<hr className="hidden border-slate-100 md:block" />
 
-				{/* ── Search ── */}
 				<div className="space-y-2">
 					<label className="text-xs font-semibold uppercase tracking-widest text-slate-500">
 						Buscar nombre
@@ -59,7 +78,6 @@ export default function ArtistFilters({
 
 				<hr className="border-slate-100" />
 
-				{/* ── Categories ── */}
 				<div className="space-y-3">
 					<label className="text-xs font-semibold uppercase tracking-widest text-slate-500">
 						Categoría
@@ -98,7 +116,6 @@ export default function ArtistFilters({
 
 				<hr className="border-slate-100" />
 
-				{/* ── Price Range ── */}
 				<div className="space-y-3">
 					<div className="flex items-center justify-between">
 						<label className="text-xs font-semibold uppercase tracking-widest text-slate-500">

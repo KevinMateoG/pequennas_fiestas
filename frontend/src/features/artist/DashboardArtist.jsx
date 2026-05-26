@@ -140,7 +140,8 @@ export default function DashboardArtist() {
             </p>
             )}
             {!isLoading && bookings.length > 0 && (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto w-full">
+            <table className="w-full text-sm whitespace-nowrap">
                 <thead>
                 <tr className="border-b bg-slate-50 text-xs font-semibold uppercase tracking-widest text-slate-500">
                     <th className="px-6 py-4 text-left">Cliente</th>
@@ -226,6 +227,7 @@ export default function DashboardArtist() {
                 ))}
                 </tbody>
             </table>
+            </div>
             )}
         </div>
         </div>

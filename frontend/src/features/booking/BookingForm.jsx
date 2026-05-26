@@ -244,7 +244,7 @@ export default function BookingForm({ artist }) {
 					</div>
 				)}
 
-				<div className="mt-6 flex justify-end gap-3">
+				<div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
 					<Button
 						type="button"
 						variant="outline"
@@ -253,14 +253,14 @@ export default function BookingForm({ artist }) {
 							setCalculatedHours('')
 							setCalculatedPrice('')
 						}}
-						className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+						className="w-full sm:w-auto rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
 					>
 						Cancelar
 					</Button>
 					<Button
 						type="submit"
 						disabled={isSubmitting || !calculatedHours}
-						className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+						className="w-full sm:w-auto rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
 					>
 						{isSubmitting ? 'Reservando...' : 'Crear Reserva'}
 					</Button>

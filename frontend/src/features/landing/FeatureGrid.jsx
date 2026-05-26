@@ -30,7 +30,7 @@ export default function FeatureGrid() {
                         Contactar consultor <span className="material-symbols-outlined text-xs">arrow_outward</span>
                     </a>
                 </div>
-                <div className="md:col-span-8 bg-white p-10 rounded-2xl border border-outline-variant/10 shadow-sm flex items-center justify-between gap-8">
+                <div className="md:col-span-8 bg-white p-10 rounded-2xl border border-outline-variant/10 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
                     <div className="flex-1">
                         <h3 className="text-2xl font-bold mb-2">Contratación Blindada</h3>
                         <p className="text-on-surface-variant text-sm leading-relaxed">
