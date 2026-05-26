@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { get } from "react-hook-form";
 import BookingDetailModal from "@/features/booking/BookingDetailModal"
+import LoadingSpinner from "@/components/ui/LoadingSpinner"
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
@@ -128,9 +129,9 @@ export default function DashboardArtist() {
 
         <div className="rounded-2xl border bg-white shadow-sm overflow-hidden">
             {isLoading && (
-            <p className="p-8 text-center text-slate-500">
-                Cargando reservas...
-            </p>
+            <div className="p-8">
+                <LoadingSpinner message="Cargando reservas…" fullPage={false} />
+            </div>
             )}
             {error && <p className="p-8 text-center text-red-500">{error}</p>}
             {!isLoading && !error && bookings.length === 0 && (
@@ -139,7 +140,8 @@ export default function DashboardArtist() {
             </p>
             )}
             {!isLoading && bookings.length > 0 && (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto w-full">
+            <table className="w-full text-sm whitespace-nowrap">
                 <thead>
                 <tr className="border-b bg-slate-50 text-xs font-semibold uppercase tracking-widest text-slate-500">
                     <th className="px-6 py-4 text-left">Cliente</th>
@@ -225,6 +227,7 @@ export default function DashboardArtist() {
                 ))}
                 </tbody>
             </table>
+            </div>
             )}
         </div>
         </div>
