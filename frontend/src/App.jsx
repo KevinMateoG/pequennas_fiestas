@@ -13,25 +13,34 @@ import AboutPage from './pages/AboutPage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
 import ContactPage from './pages/ContactPage'
+import { ErrorBoundary } from './components/layout/ErrorBoundary'
+import NotFoundPage from './pages/errors/NotFoundPage'
+import UnauthorizedPage from './pages/errors/UnauthorizedPage'
+import ServerErrorPage from './pages/errors/ServerErrorPage'
+
 function App() {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/detail/:id" element={<ArtistDetailsPage />} />
-        <Route path="/detail" element={<Navigate to="/catalog" replace />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/onboarding/artista' element={<OnboardingPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/detail/:id" element={<ArtistDetailsPage />} />
+          <Route path="/detail" element={<Navigate to="/catalog" replace />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/401" element={<UnauthorizedPage />} />
+          <Route path="/500" element={<ServerErrorPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/onboarding/artista' element={<OnboardingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Routes>
+      </ErrorBoundary>
       <Footer></Footer>
     </>
   )

@@ -17,7 +17,7 @@ export function DashboardPage() {
 
   // Only active artista sessions can access this route.
   if (!user || user.role !== 'artista') {
-    return <Navigate to="/" replace />
+    return <Navigate to="/401" replace />
   }
 
   return <DashboardArtist />
