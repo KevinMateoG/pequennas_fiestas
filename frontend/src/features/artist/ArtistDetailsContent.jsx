@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import ArtistBookingsList from './ArtistBookingsList'
+import ArtistRatingStars from './ArtistRatingStars'
 
 export default function ArtistDetailsContent({ artist, isOwner }) {
+	const reviewCount = Number.isFinite(Number(artist.ratingCount)) ? Number(artist.ratingCount) : undefined
+
 	return (
 		<>
 			<Link className="mb-6 inline-block text-sm font-semibold text-indigo-600" to="/catalog">
@@ -20,10 +23,18 @@ export default function ArtistDetailsContent({ artist, isOwner }) {
 					<h1 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900">{artist.name}</h1>
 					<p className="mt-1 text-sm text-zinc-500">{artist.category}</p>
 
+					<div className="mt-4 rounded-xl bg-amber-50 px-4 py-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-amber-700">Calificacion promedio</p>
+						<div className="mt-2 flex flex-wrap items-center gap-3">
+							<ArtistRatingStars rating={artist.rating} reviewCount={reviewCount} size="lg" />
+							<span className="text-xs text-amber-700">Listo para conectar con reseñas del backend</span>
+						</div>
+					</div>
+
 					<div className="mt-6 space-y-4 text-sm">
 						<div className="flex items-center justify-between border-b border-zinc-100 pb-3">
 							<span className="text-zinc-500">Calificacion</span>
-							<span className="font-semibold text-zinc-900">{artist.rating.toFixed(1)}</span>
+							<span className="font-semibold text-zinc-900">{Number(artist.rating || 0).toFixed(1)}</span>
 						</div>
 						<div className="flex items-center justify-between border-b border-zinc-100 pb-3">
 							<span className="text-zinc-500">Tarifa base</span>
@@ -49,6 +60,37 @@ export default function ArtistDetailsContent({ artist, isOwner }) {
 				<h2 className="text-xl font-bold tracking-tight text-zinc-900">Sobre el artista</h2>
 				<p className="mt-3 leading-relaxed text-zinc-600">{artist.bio}</p>
 			</section>
+
+			<section className="mt-8 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-6">
+				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+					<div>
+						<h2 className="text-xl font-bold tracking-tight text-zinc-900">Reseñas y valoraciones</h2>
+						<p className="mt-1 text-sm text-zinc-600">
+							Esta sección quedará conectada al backend para mostrar y guardar calificaciones de clientes.
+						</p>
+					</div>
+					<div className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-zinc-700 shadow-sm">
+						Preparado para futuras reseñas
+					</div>
+				</div>
+				<div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,320px)_1fr]">
+					<div className="rounded-xl bg-white p-4 shadow-sm">
+						<p className="text-sm font-semibold text-zinc-900">Resumen visual</p>
+						<div className="mt-3 space-y-2 text-sm text-zinc-600">
+							<p>Promedio visible en tarjeta y perfil.</p>
+							<p>Espacio reservado para conteo total, distribución y comentarios.</p>
+							<p>Sin acoplamiento al backend por ahora.</p>
+						</div>
+					</div>
+					<div className="rounded-xl border border-dashed border-zinc-200 bg-white p-4">
+						<p className="text-sm font-semibold text-zinc-900">Próximo formulario</p>
+						<p className="mt-2 text-sm text-zinc-600">
+							Cuando me indiques, aquí conectamos el flujo para que un cliente deje una calificación de una a cinco estrellas.
+						</p>
+					</div>
+				</div>
+			</section>
+
 			<section className="mt-8">
 				{isOwner && (
 					<section className="mt-8">
