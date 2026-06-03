@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import ArtistBookingsList from './ArtistBookingsList'
 import ArtistRatingStars from './ArtistRatingStars'
+import ArtistRatingForm from './ArtistRatingForm'
 
-export default function ArtistDetailsContent({ artist, isOwner }) {
+export default function ArtistDetailsContent({ artist, isOwner, onRatingSubmitted }) {
 	const reviewCount = Number.isFinite(Number(artist.ratingCount)) ? Number(artist.ratingCount) : undefined
 
 	return (
@@ -66,11 +67,11 @@ export default function ArtistDetailsContent({ artist, isOwner }) {
 					<div>
 						<h2 className="text-xl font-bold tracking-tight text-zinc-900">Reseñas y valoraciones</h2>
 						<p className="mt-1 text-sm text-zinc-600">
-							Esta sección quedará conectada al backend para mostrar y guardar calificaciones de clientes.
+							Aquí puedes dejar una calificación si ya eres cliente y reservaste este artista.
 						</p>
 					</div>
 					<div className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-zinc-700 shadow-sm">
-						Preparado para futuras reseñas
+						{reviewCount ?? 0} reseñas
 					</div>
 				</div>
 				<div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,320px)_1fr]">
@@ -79,14 +80,11 @@ export default function ArtistDetailsContent({ artist, isOwner }) {
 						<div className="mt-3 space-y-2 text-sm text-zinc-600">
 							<p>Promedio visible en tarjeta y perfil.</p>
 							<p>Espacio reservado para conteo total, distribución y comentarios.</p>
-							<p>Sin acoplamiento al backend por ahora.</p>
+							<p>La nota se envía al backend con sesión de cliente y reserva aceptada.</p>
 						</div>
 					</div>
 					<div className="rounded-xl border border-dashed border-zinc-200 bg-white p-4">
-						<p className="text-sm font-semibold text-zinc-900">Próximo formulario</p>
-						<p className="mt-2 text-sm text-zinc-600">
-							Cuando me indiques, aquí conectamos el flujo para que un cliente deje una calificación de una a cinco estrellas.
-						</p>
+						<ArtistRatingForm artistId={artist.id} artistName={artist.name} onSubmitted={onRatingSubmitted} />
 					</div>
 				</div>
 			</section>
