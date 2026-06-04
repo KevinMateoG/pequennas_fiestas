@@ -73,15 +73,7 @@ export default function ArtistDetailsContent({ artist, isOwner, onRatingSubmitte
 						{reviewCount ?? 0} reseñas
 					</div>
 				</div>
-				<div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,320px)_1fr]">
-					<div className="rounded-xl bg-white p-4 shadow-sm">
-						<p className="text-sm font-semibold text-zinc-900">Resumen visual</p>
-						<div className="mt-3 space-y-2 text-sm text-zinc-600">
-							<p>Promedio visible en tarjeta y perfil.</p>
-							<p>Espacio reservado para conteo total, distribución y comentarios.</p>
-							<p>La nota se envía al backend con sesión de cliente y reserva aceptada.</p>
-						</div>
-					</div>
+				<div className="mt-5">
 					<div className="rounded-xl border border-dashed border-zinc-200 bg-white p-4">
 						<ArtistRatingForm artistId={artist.id} artistName={artist.name} onSubmitted={onRatingSubmitted} />
 					</div>

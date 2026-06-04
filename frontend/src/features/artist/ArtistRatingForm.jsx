@@ -116,9 +116,6 @@ export default function ArtistRatingForm({ artistId, artistName, onSubmitted }) 
 					<p className="text-sm font-semibold text-zinc-900">Califica a {artistName}</p>
 					<p className="mt-1 text-sm text-zinc-600">{helperText}</p>
 				</div>
-				<div className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
-					Solo clientes
-				</div>
 			</div>
 
 			<div className="mt-5 space-y-3">
