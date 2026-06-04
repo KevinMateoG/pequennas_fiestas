@@ -17,6 +17,24 @@ function ArtistDetailsPage() {
 
 	const isOwner = user && artist && user.id === artist.userId
 
+	const handleRatingSubmitted = (meta) => {
+		if (!meta) {
+			return
+		}
+
+		setArtist((currentArtist) => {
+			if (!currentArtist) {
+				return currentArtist
+			}
+
+			return {
+				...currentArtist,
+				rating: typeof meta.rating === 'number' ? meta.rating : currentArtist.rating,
+				ratingCount: typeof meta.ratingCount === 'number' ? meta.ratingCount : currentArtist.ratingCount,
+			}
+		})
+	}
+
 	useEffect(() => {
 		if (!id) {
 			setError('No se encontro el identificador del artista.')
@@ -68,7 +86,7 @@ function ArtistDetailsPage() {
 
 	return (
 		<main className="mx-auto min-h-screen max-w-6xl px-6 pb-14 pt-24 text-zinc-800">
-			<ArtistDetailsContent artist={artist} isOwner={isOwner}/>
+			<ArtistDetailsContent artist={artist} isOwner={isOwner} onRatingSubmitted={handleRatingSubmitted} />
 			{!isOwner && (
 				<div className="mt-12">
 					<BookingForm artist={artist} />
