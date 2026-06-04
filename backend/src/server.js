@@ -14,6 +14,30 @@ import path from 'path'
 
 const app = express();
 
+async function ensureArtistRatingsTable() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS artist_ratings (
+      id uuid PRIMARY KEY,
+      artist_id text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+      client_id text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+      rating numeric(3,1) NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      comment text,
+      created_at timestamp NOT NULL DEFAULT NOW(),
+      updated_at timestamp NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS artist_ratings_artist_client_unique
+    ON artist_ratings (artist_id, client_id)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS artist_ratings_artist_idx
+    ON artist_ratings (artist_id)
+  `;
+}
+
 
 app.use(express.json());
 
@@ -75,6 +99,7 @@ app.use((error, _req, res, _next) => {
 async function startServer() {
   try {
     await checkDbConnection();
+    await ensureArtistRatingsTable();
     const port = process.env.PORT ?? 3000;
 
     app.listen(port, () => {

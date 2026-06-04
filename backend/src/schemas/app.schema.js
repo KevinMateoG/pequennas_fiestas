@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, boolean, timestamp, numeric } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, boolean, timestamp, numeric, index, uniqueIndex } from "drizzle-orm/pg-core";
 import { user } from "./auth.schema.js";
 import { decimal } from "drizzle-orm/gel-core";
 
@@ -28,4 +28,21 @@ export const bookings = pgTable("bookings", {
     createdAt: timestamp('create_at').notNull().defaultNow(),
     updatedAt: timestamp('update_at').notNull().defaultNow()
     }
+)
+
+export const artistRatings = pgTable(
+    "artist_ratings",
+    {
+        id: uuid("id").primaryKey(),
+        artistId: text("artist_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+        clientId: text("client_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+        rating: numeric("rating", { precision: 3, scale: 1 }).notNull(),
+        comment: text("comment"),
+        createdAt: timestamp("created_at").notNull().defaultNow(),
+        updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    },
+    (table) => ({
+        artistIndex: index("artist_ratings_artist_idx").on(table.artistId),
+        artistClientUnique: uniqueIndex("artist_ratings_artist_client_unique").on(table.artistId, table.clientId),
+    })
 )
