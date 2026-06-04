@@ -28,7 +28,6 @@ export default function ArtistDetailsContent({ artist, isOwner, onRatingSubmitte
 						<p className="text-xs font-semibold uppercase tracking-widest text-amber-700">Calificacion promedio</p>
 						<div className="mt-2 flex flex-wrap items-center gap-3">
 							<ArtistRatingStars rating={artist.rating} reviewCount={reviewCount} size="lg" />
-							<span className="text-xs text-amber-700">Listo para conectar con reseñas del backend</span>
 						</div>
 					</div>
 
